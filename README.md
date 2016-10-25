@@ -2,17 +2,23 @@
 
 Basic example:
 
-    In [1]: from scone_client import SconeClient
+    >>> from scone_client import SconeClient
+    >>> client = SconeClient()
 
-    In [2]: client = SconeClient()
+    >>> client.query('(new-indv {Dumbo} {elephant})')
+    '{Dumbo}'
 
-    In [3]: client.query('(new-indv {Dumbo} {elephant})')
-    Out[3]: '{Dumbo}'
+    >>> client.predicate('(is-x-a-y? {Dumbo} {mammal})')
+    'YES'
 
-    In [4]: client.predicate('(is-x-a-y? {Dumbo} {mammal})')
-    Out[4]: 'YES'
+    >>> client.predicate('(is-x-a-y? {Dumbo} {air transport})')
+    'MAYBE'
 
-    In [5]: client.predicate('(is-x-a-y? {Dumbo} {air transport})')
-    Out[5]: 'MAYBE'
+    >>> client.query('(new-is-a {Dumbo} {bird})')
+    Traceback (most recent call last):
+	  ...
+      File "...", line 65, in check_error
+        raise SconeError(msg)
+    scone_client.SconeError: {Dumbo} cannot be a {bird}.
 
-    In [6]: client.close()
+    >>> client.close()

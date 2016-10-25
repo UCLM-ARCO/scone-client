@@ -5,7 +5,7 @@ Maintainer: David Villa Alises <David.Villa@gmail.com>
 Build-Depends: debhelper (>= 7.0.50~), quilt, python3:any
 Standards-Version: 3.9.8
 
-Package: python-scone-client
+Package: python3-scone-client
 Architecture: all
 Depends: ${misc:Depends}
 Description: Python3 module to interact a scone-server.
