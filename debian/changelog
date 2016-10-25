@@ -1,6 +1,11 @@
+scone-client (0.20161025.1-1) unstable; urgency=low
+
+  * New release
+
+ -- David Villa Alises <David.Villa@gmail.com>  Tue, 25 Oct 2016 15:09:55 +0100
+
 scone-client (0.20161025-1) unstable; urgency=low
 
   * Initial release
 
  -- David Villa Alises <David.Villa@gmail.com>  Tue, 25 Oct 2016 14:44:00 +0100
-
