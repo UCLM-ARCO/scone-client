@@ -22,7 +22,7 @@ class SconeClient:
         self.buffer = b''
 
     def close(self):
-        self.sock.shutdown()
+        self.sock.shutdown(socket.SHUT_RDWR)
         self.sock.close()
 
     def get_line(self):

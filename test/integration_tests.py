@@ -19,6 +19,9 @@ class ClientTests(TestCase):
     def setUp(self):
         self.sut = SconeClient()
 
+    def test_close(self):
+        self.sut.close()
+
     def test_predicate_yes(self):
         self.sut.predicate('(is-x-a-y? {bird} {animal})')
 
