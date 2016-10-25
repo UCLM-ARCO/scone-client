@@ -5,7 +5,7 @@ A simple python3 module to interact with a scone-server.
 Basic example:
 
     >>> from scone_client import SconeClient
-    >>> client = SconeClient()
+    >>> client = SconeClient(host='localhost', port=6517)  # default params
 
     >>> client.query('(new-indv {Dumbo} {elephant})')
     '{Dumbo}'
