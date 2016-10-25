@@ -1,0 +1,11 @@
+# -*- coding: utf-8; mode: shell-script; tab-width: 4 -*-
+
+function ian-release-hook {
+    local version=$(upstream-version)
+    sc-assert-files-exist version.py
+    echo "__version__ = '$version'" > version.py
+}
+
+function ian-clean-hook {
+	rm -rf scone_client.egg-info
+}

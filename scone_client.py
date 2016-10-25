@@ -4,9 +4,11 @@
 import socket
 
 BUFFERSIZE = 8192
-ENCODER = 'utf-8'
+encoding = 'utf-8'
 PROMPT = b'[PROMPT]'
 SCONE_ERROR = '*****SCONE-ERROR*****'
+
+__all__ = 'SconeClient SconeError'.split()
 
 
 class SconeError(Exception):
@@ -18,6 +20,10 @@ class SconeClient:
         self.sock = socket.socket()
         self.sock.connect((host, port))
         self.buffer = b''
+
+    def close(self):
+        self.sock.shutdown()
+        self.sock.close()
 
     def get_line(self):
         def next_line(where):
@@ -38,8 +44,8 @@ class SconeClient:
     def send(self, sentence):
         assert self.get_line() == PROMPT
         sentence = sentence.strip() + '\n'
-        self.sock.sendall(sentence.encode(ENCODER))
-        response = self.get_line().decode(ENCODER)
+        self.sock.sendall(sentence.encode(encoding))
+        response = self.get_line().decode(encoding)
         self.check_error(response)
         return response
 

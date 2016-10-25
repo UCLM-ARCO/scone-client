@@ -1,0 +1,12 @@
+Source: scone-client
+Section: utils
+Priority: extra
+Maintainer: David Villa Alises <David.Villa@gmail.com>
+Build-Depends: debhelper (>= 7.0.50~), quilt, python3:any
+Standards-Version: 3.9.8
+
+Package: scone-client
+Architecture: all
+Depends: ${misc:Depends}
+Description: Python3 module to interact a scone-server.
+ Python3 module to interact a running scone-server.
