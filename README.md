@@ -1,4 +1,6 @@
-# Scone client module
+# Python Scone client module
+
+A simple python3 module to interact with a scone-server.
 
 Basic example:
 
