@@ -2,6 +2,7 @@
 # -*- coding: utf-8; mode: python -*-
 
 import socket
+from functools import lru_cache
 
 BUFFERSIZE = 8192
 encoding = 'utf-8'
@@ -38,9 +39,9 @@ class SconeClient:
             data += self.sock.recv(BUFFERSIZE)
 
         line = next_line(data)
-        # print("get-line rest:", self.buffer)
         return line
 
+    @lru_cache(maxsize=512)
     def send(self, sentence):
         assert self.get_line() == PROMPT
         sentence = sentence.strip() + '\n'
@@ -56,6 +57,10 @@ class SconeClient:
         return response
 
     def query(self, sentence):
+        return self.send(sentence)
+
+    def sentence(self, sentence):
+        self.send.cache_clear()
         return self.send(sentence)
 
     def check_error(self, response):

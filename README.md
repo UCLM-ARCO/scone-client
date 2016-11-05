@@ -5,7 +5,7 @@ Basic example:
     >>> from scone_client import SconeClient
     >>> client = SconeClient()
 
-    >>> client.query('(new-indv {Dumbo} {elephant})')
+    >>> client.sentence('(new-indv {Dumbo} {elephant})')
     '{Dumbo}'
 
     >>> client.predicate('(is-x-a-y? {Dumbo} {mammal})')
@@ -14,7 +14,7 @@ Basic example:
     >>> client.predicate('(is-x-a-y? {Dumbo} {air transport})')
     'MAYBE'
 
-    >>> client.query('(new-is-a {Dumbo} {bird})')
+    >>> client.sentence('(new-is-a {Dumbo} {bird})')
     Traceback (most recent call last):
 	  ...
       File "...", line 65, in check_error
@@ -22,3 +22,7 @@ Basic example:
     scone_client.SconeError: {Dumbo} cannot be a {bird}.
 
     >>> client.close()
+
+
+The results for methods `query` and `predicate` are cached to improving performance. Any
+invocation to method `sentence` invalidates de cache.
