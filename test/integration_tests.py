@@ -38,7 +38,7 @@ class ClientTests(TestCase):
         assert_that(response, is_('MAYBE'))
 
     def test_predicate_error(self):
-        expected_msg = 'The function COMMON-LISP-USER::MISSING-FUNCTION is undefined.'
+        expected_msg = 'The function COMMON-LISP-USER::MISSING-FUNCTION is undefined'
 
         try:
             self.sut.predicate('(missing-function)')
@@ -61,10 +61,47 @@ class ClientTests(TestCase):
         response = self.sut.sentence('(new-indv {Daniel} {elephant})')
         assert_that(response, is_('{Daniel}'))
 
-        expected_msg = '{Daniel} cannot be a {bird}.'
+        expected_msg = '{Daniel} cannot be a {bird}'
 
         try:
             response = self.sut.sentence('(new-is-a {Daniel} {bird})')
             self.fail('exception should be raised!')
         except SconeError as e:
             assert_that(str(e), is_(expected_msg))
+
+    def test_multi_sentence(self):
+        sentences = '''
+        (new-indv {Maria} {tiger})
+        (new-indv {Oscar} {bat})
+        (new-indv {Felix} {monkey})
+        (is-x-a-y? {Maria} {lion})
+        (is-x-a-y? {Oscar} {mammal})
+        (is-x-a-y? {Julio} {bird})
+        '''
+
+        responses = self.sut.multi_sentence(sentences)
+
+        expected = [
+            '{Maria}',
+            '{Oscar}',
+            '{Felix}',
+            'NO',
+            'YES',
+            'MAYBE',
+        ]
+
+        assert_that(responses, is_(expected))
+
+    def test_multi_sentence_FAIL(self):
+        sentences = '''
+        (new-indv {Lucia} {tiger})
+        (new-is-a {Lucia} {bird})
+        '''
+
+        responses = self.sut.multi_sentence(sentences)
+        expected = [
+            '{Lucia}',
+            SconeError('{Lucia} cannot be a {bird}')
+        ]
+
+        assert_that(responses, is_(expected))

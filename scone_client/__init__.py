@@ -13,7 +13,11 @@ __all__ = 'SconeClient SconeError'.split()
 
 
 class SconeError(Exception):
-    pass
+    def __eq__(self, other):
+        return isinstance(other, SconeError) and self.args == other.args
+
+    def __hash__(self):
+        return hash(id(self))
 
 
 class SconeClient:
@@ -63,8 +67,21 @@ class SconeClient:
         self.send.cache_clear()
         return self.send(sentence)
 
+    def multi_sentence(self, sentences):
+        retval = []
+        for sentence in [x.strip() for x in sentences.split('\n')]:
+            if not sentence:
+                continue
+
+            try:
+                retval.append(self.send(sentence))
+            except SconeError as e:
+                retval.append(e)
+
+        return retval
+
     def check_error(self, response):
         if response.startswith(SCONE_ERROR):
             assert self.get_line() == b'NIL'
-            msg = response.split('Error:')[1]
+            msg = response.split('Error:')[1].strip('.')
             raise SconeError(msg)
