@@ -9,12 +9,12 @@ from doublex import assert_that, is_
 class ClientTests(TestCase):
     @classmethod
     def setupClass(self):
-        SconeClient().query('(new-indv {checkpoint} {thing})')
+        SconeClient().sentence('(new-indv {checkpoint} {thing})')
 
     @classmethod
     def tearDownClass(self):
-        SconeClient().query('(remove-elements-after {checkpoint})')
-        SconeClient().query('(remove-last-element)')
+        SconeClient().sentence('(remove-elements-after {checkpoint})')
+        SconeClient().sentence('(remove-last-element)')
 
     def setUp(self):
         self.sut = SconeClient()
@@ -47,24 +47,24 @@ class ClientTests(TestCase):
             assert_that(str(e), is_(expected_msg))
 
     def test_new_indv(self):
-        response = self.sut.query('(new-indv {Marta} {elephant})')
+        response = self.sut.sentence('(new-indv {Marta} {elephant})')
         assert_that(response, is_('{Marta}'))
 
     def test_new_is_a_OK(self):
-        response = self.sut.query('(new-indv {Carlos} {thing})')
+        response = self.sut.sentence('(new-indv {Carlos} {thing})')
         assert_that(response, is_('{Carlos}'))
 
-        response = self.sut.query('(new-is-a {Carlos} {bird})')
+        response = self.sut.sentence('(new-is-a {Carlos} {bird})')
         assert_that(response[:8], is_('{Is-A 0-'))
 
     def test_new_is_a_FAIL(self):
-        response = self.sut.query('(new-indv {Daniel} {elephant})')
+        response = self.sut.sentence('(new-indv {Daniel} {elephant})')
         assert_that(response, is_('{Daniel}'))
 
         expected_msg = '{Daniel} cannot be a {bird}.'
 
         try:
-            response = self.sut.query('(new-is-a {Daniel} {bird})')
+            response = self.sut.sentence('(new-is-a {Daniel} {bird})')
             self.fail('exception should be raised!')
         except SconeError as e:
             assert_that(str(e), is_(expected_msg))
