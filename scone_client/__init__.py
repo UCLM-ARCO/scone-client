@@ -3,6 +3,7 @@
 
 import socket
 from functools import lru_cache
+import logging
 
 BUFFERSIZE = 8192
 encoding = 'utf-8'
@@ -48,9 +49,14 @@ class SconeClient:
     @lru_cache(maxsize=512)
     def send(self, sentence):
         assert self.get_line() == PROMPT
-        sentence = sentence.strip() + '\n'
+        sentence = sentence.strip()
+        logging.debug("S <- '{}'".format(sentence))
+
+        sentence += '\n'
         self.sock.sendall(sentence.encode(encoding))
         response = self.get_line().decode(encoding)
+        logging.debug("S -> '{}'".format(response))
+
         self.check_error(response)
         return response
 
@@ -82,6 +88,7 @@ class SconeClient:
 
     def check_error(self, response):
         if response.startswith(SCONE_ERROR):
-            assert self.get_line() == b'NIL'
+            reply = self.get_line()
+            assert reply == b'NIL', "reply was <<{}>>".format(reply)
             msg = response.split('Error:')[1].strip('.')
             raise SconeError(msg)

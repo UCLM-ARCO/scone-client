@@ -105,3 +105,10 @@ class ClientTests(TestCase):
         ]
 
         assert_that(responses, is_(expected))
+
+    def test_checkpoint(self):
+        response = self.sut.sentence('(new-indv {Mork} {mammal})')
+        assert_that(response, is_('{Mork}'))
+
+        response = self.sut.sentence('(checkpoint-new "/tmp/kkk.lisp")')
+        assert_that(response, is_('NIL'))
