@@ -46,15 +46,27 @@ class SconeClient:
         line = next_line(data)
         return line
 
+    def get_reply(self):
+        reply = self.get_line()
+        if not reply.startswith(b'('):
+            return reply
+
+        while not reply.endswith(b')'):
+            reply += self.get_line()
+
+        return reply
+
     @lru_cache(maxsize=512)
     def send(self, sentence):
-        assert self.get_line() == PROMPT
+        line = self.get_line()
+        assert line == PROMPT, line
+
         sentence = sentence.strip()
         logging.debug("S <- '{}'".format(sentence))
 
         sentence += '\n'
         self.sock.sendall(sentence.encode(encoding))
-        response = self.get_line().decode(encoding)
+        response = self.get_reply().decode(encoding)
         logging.debug("S -> '{}'".format(response))
 
         self.check_error(response)
