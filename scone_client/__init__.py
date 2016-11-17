@@ -106,7 +106,7 @@ class SconeClient:
                 retval.append(self.send(sentence))
             except SconeError as e:
                 self.sentence('(remove-elements-after {%s})' % checkpoint)
-                SconeClient().sentence('(remove-last-element)')
+                self.sentence('(remove-last-element)')
 
                 reason = "The sentence '{}' raises '{}'".format(sentence, str(e))
                 raise SconeError(reason)
