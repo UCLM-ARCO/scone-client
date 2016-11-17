@@ -4,6 +4,7 @@
 import socket
 from functools import lru_cache
 import logging
+import uuid
 
 BUFFERSIZE = 8192
 encoding = 'utf-8'
@@ -25,7 +26,7 @@ class SconeClient:
     def __init__(self, host='localhost', port=6517):
         self.sock = socket.socket()
         self.sock.connect((host, port))
-        self.buffer = b''
+        self.buff = b''
 
     def close(self):
         self.sock.shutdown(socket.SHUT_RDWR)
@@ -33,11 +34,11 @@ class SconeClient:
 
     def get_line(self):
         def next_line(where):
-            line, self.buffer = where.split(b'\n', 1)
+            line, self.buff = where.split(b'\n', 1)
             return line
 
-        if b'\n' in self.buffer:
-            return next_line(self.buffer)
+        if b'\n' in self.buff:
+            return next_line(self.buff)
 
         data = bytes()
         while b'\n' not in data:
@@ -62,6 +63,9 @@ class SconeClient:
         assert line == PROMPT, line
 
         sentence = sentence.strip()
+        if sentence[0] != '(' or sentence[-1] != ')':
+            raise SconeError("Bad input format: '{}'".format(sentence))
+
         logging.debug("S <- '{}'".format(sentence))
 
         sentence += '\n'
@@ -75,7 +79,11 @@ class SconeClient:
     def predicate(self, sentence):
         response = self.send(sentence)
 
-        assert response in ['YES', 'NO', 'MAYBE']
+        if response not in ['YES', 'NO', 'MAYBE']:
+            reason = "Sentence '{}' was not a predicate: '{}'".format(
+                sentence, response)
+            raise SconeError(reason)
+
         return response
 
     def query(self, sentence):
@@ -86,6 +94,9 @@ class SconeClient:
         return self.send(sentence)
 
     def multi_sentence(self, sentences):
+        checkpoint = 'checkpoint-{}'.format(uuid.uuid1())
+        self.sentence('(new-indv {%s} {thing})' % checkpoint)
+
         retval = []
         for sentence in [x.strip() for x in sentences.split('\n')]:
             if not sentence:
@@ -94,13 +105,17 @@ class SconeClient:
             try:
                 retval.append(self.send(sentence))
             except SconeError as e:
-                retval.append(e)
+                self.sentence('(remove-elements-after {%s})' % checkpoint)
+                SconeClient().sentence('(remove-last-element)')
+
+                reason = "The sentence '{}' raises '{}'".format(sentence, str(e))
+                raise SconeError(reason)
 
         return retval
 
     def check_error(self, response):
         if response.startswith(SCONE_ERROR):
             reply = self.get_line()
-            assert reply == b'NIL', "reply was <<{}>>".format(reply)
+            assert reply == b'NIL', "reply was '{}'".format(reply)
             msg = response.split('Error:')[1].strip('.')
             raise SconeError(msg)

@@ -98,13 +98,15 @@ class ClientTests(TestCase):
         (new-is-a {Lucia} {bird})
         '''
 
-        responses = self.sut.multi_sentence(sentences)
-        expected = [
-            '{Lucia}',
-            SconeError('{Lucia} cannot be a {bird}')
-        ]
+        try:
+            self.sut.multi_sentence(sentences)
+            self.fail('exception should be raised')
+        except SconeError as e:
+            expected = "The sentence '(new-is-a {Lucia} {bird})' raises '{Lucia} cannot be a {bird}'"
+            self.assertEquals(expected, str(e))
 
-        assert_that(responses, is_(expected))
+        self.assertEquals('MAYBE',
+                          self.sut.sentence('(is-x-a-y? {Lucia} {tiger})'))
 
     def test_checkpoint(self):
         response = self.sut.sentence('(new-indv {Mork} {mammal})')
