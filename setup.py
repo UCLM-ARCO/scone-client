@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Copyright (C) 2012, 2015 David Villa Alises
+# Copyright (C) 2016 David Villa Alises
 #
 #
 # This program is free software; you can redistribute it and/or modify
@@ -31,7 +31,7 @@ exec(open('version.py').read())
 config = dict(
     name         = 'scone-client',
     version      = __version__,
-    description  = 'module to connect a scone-server',
+    description  = 'Module to connect to a scone-server, supporing multi-sentence and error handling.',
     author       = 'David Villa Alises',
     author_email = 'David.Villa@gmail.com',
     url          = 'https://bitbucket.org/arco_group/scone-client',
