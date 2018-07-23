@@ -27,4 +27,4 @@ Basic example:
 
 
 The results for methods `query` and `predicate` are cached to improving performance. Any
-invocation to method `sentence` invalidates de cache.
+invocation to method `sentence` invalidates the cache.
