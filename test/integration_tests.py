@@ -1,25 +1,38 @@
 # -*- coding: utf-8; mode: python -*-
 
+import io
+import signal
+from pathlib import Path
+
 from unittest import TestCase
 from scone_client import SconeClient, SconeError
 
-from doublex import assert_that, is_
+from commodity.os_ import SubProcess, PIPE
+from commodity.testing import SubProcessMixin, assert_that, wait_that, is_not
+from commodity.net import localhost, listen_port
+from hamcrest import is_
 
 
-class ClientTests(TestCase):
-    @classmethod
-    def setupClass(self):
-        SconeClient().sentence('(new-indv {checkpoint} {thing})')
-
-    @classmethod
-    def tearDownClass(self):
-        SconeClient().sentence('(remove-elements-after {checkpoint})')
-        SconeClient().sentence('(remove-last-element)')
-
+class ClientTests(TestCase, SubProcessMixin):
     def setUp(self):
-        self.sut = SconeClient()
+        port = 6517
 
-    def test_close(self):
+        Path('.scone/server.pid').unlink(missing_ok=True)
+        assert_that(localhost, is_not(listen_port(port)))
+
+        self.scone = SubProcess('scone-server',
+                                stdout=io.BytesIO(), stderr=io.BytesIO(),
+                                signal=signal.SIGINT)
+        # self.addCleanup(lambda:self.scone.terminate(signal.SIGINT))
+        self.addSubProcessCleanup(self.scone)
+        wait_that(localhost, listen_port(port))
+
+        self.sut = SconeClient()
+        self.sut.sentence('(new-indv {checkpoint} {thing})')
+
+    def tearDown(self):
+        self.sut.sentence('(remove-elements-after {checkpoint})')
+        self.sut.sentence('(remove-last-element)')
         self.sut.close()
 
     def test_predicate_yes(self):
@@ -108,9 +121,9 @@ class ClientTests(TestCase):
         self.assertEquals('MAYBE',
                           self.sut.sentence('(is-x-a-y? {Lucia} {tiger})'))
 
-    def test_checkpoint(self):
-        response = self.sut.sentence('(new-indv {Mork} {mammal})')
-        assert_that(response, is_('{Mork}'))
-
-        response = self.sut.sentence('(checkpoint-new "/tmp/kkk.lisp")')
-        assert_that(response, is_('NIL'))
+#     def test_checkpoint(self):
+#         response = self.sut.sentence('(new-indv {Mork} {mammal})')
+#         assert_that(response, is_('{Mork}'))
+#
+#         response = self.sut.sentence('(checkpoint-new "/tmp/kkk.lisp")')
+#         assert_that(response, is_('NIL'))

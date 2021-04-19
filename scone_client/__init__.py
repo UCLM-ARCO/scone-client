@@ -5,10 +5,11 @@ import socket
 from functools import lru_cache
 import logging
 import uuid
+import re
 
 BUFFERSIZE = 8192
-encoding = 'utf-8'
-PROMPT = b'[PROMPT]'
+ENCODING = 'utf-8'
+PROMPT = '[PROMPT]'
 SCONE_ERROR = '*****SCONE-ERROR*****'
 
 __all__ = 'SconeClient SconeError'.split()
@@ -22,40 +23,43 @@ class SconeError(Exception):
         return hash(id(self))
 
 
-class SconeClient:
-    def __init__(self, host='localhost', port=6517):
-        self.sock = socket.socket()
-        self.sock.connect((host, port))
-        self.buff = b''
-
-    def close(self):
-        self.sock.shutdown(socket.SHUT_RDWR)
-        self.sock.close()
+class BaseSconeClient:
+    def __init__(self):
+        self.buff = ''
 
     def get_line(self):
         def next_line(where):
-            line, self.buff = where.split(b'\n', 1)
+            line, self.buff = where.split('\n', 1)
             return line
 
-        if b'\n' in self.buff:
+        self.buff = self.buff.lstrip()
+
+        if '\n' in self.buff:
             return next_line(self.buff)
 
-        data = bytes()
-        while b'\n' not in data:
-            data += self.sock.recv(BUFFERSIZE)
+        data = ""
+        while '\n' not in data:
+            data += self.read()
 
         line = next_line(data)
         return line
 
     def get_reply(self):
         reply = self.get_line()
-        if not reply.startswith(b'('):
+        if not reply.startswith('('):
             return reply
 
-        while not reply.endswith(b')'):
+        while not reply.endswith(')'):
             reply += self.get_line()
 
         return reply
+
+    def read_until(self, flag):
+        while flag not in self.buff:
+            self.buff += self.read()
+
+        retval, self.buff = self.buff.split(flag, 1)
+        return retval
 
     @lru_cache(maxsize=512)
     def send(self, sentence):
@@ -69,8 +73,8 @@ class SconeClient:
         logging.debug("S <- '{}'".format(sentence))
 
         sentence += '\n'
-        self.sock.sendall(sentence.encode(encoding))
-        response = self.get_reply().decode(encoding)
+        self.write(sentence)
+        response = self.get_reply()
         logging.debug("S -> '{}'".format(response))
 
         self.check_error(response)
@@ -115,7 +119,48 @@ class SconeClient:
 
     def check_error(self, response):
         if response.startswith(SCONE_ERROR):
-            reply = self.get_line()
-            assert reply == b'NIL', "reply was '{}'".format(reply)
-            msg = response.split('Error:')[1].strip('.')
+            reply = response + self.read_until('NIL')
+            reply = re.sub('\s+',' ', reply.strip())
+            msg = reply.split('Error:')[1].strip('.')
             raise SconeError(msg)
+
+    def read(self):
+        raise NotImplementedError
+
+    def write(self, msg):
+        raise NotImplementedError
+
+    def close(self):
+        pass
+
+
+class PipeSconeClient(BaseSconeClient):
+    def __init__(self, stdin, stdout):
+        super().__init__()
+        self.stdin = stdin
+        self.stdout = stdout
+
+    def read(self):
+        return self.stdin.read()
+
+    def write(self, msg):
+        written = 0
+        while written < len(msg):
+            written += self.stdout.write(msg[written:])
+
+
+class SconeClient(BaseSconeClient):
+    def __init__(self, host='localhost', port=6517):
+        super().__init__()
+        self.sock = socket.socket()
+        self.sock.connect((host, port))
+
+    def close(self):
+        self.sock.shutdown(socket.SHUT_RDWR)
+        self.sock.close()
+
+    def read(self):
+        return self.sock.recv(BUFFERSIZE).decode(ENCODING)
+
+    def write(self, msg):
+        self.sock.sendall(msg.encode(ENCODING))
