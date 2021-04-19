@@ -28,20 +28,12 @@ class BaseSconeClient:
         self.buff = ''
 
     def get_line(self):
-        def next_line(where):
-            line, self.buff = where.split('\n', 1)
-            return line
-
         self.buff = self.buff.lstrip()
 
-        if '\n' in self.buff:
-            return next_line(self.buff)
+        while '\n' not in self.buff:
+            self.buff += self.read()
 
-        data = ""
-        while '\n' not in data:
-            data += self.read()
-
-        line = next_line(data)
+        line, self.buff = self.buff.split('\n', 1)
         return line
 
     def get_reply(self):
@@ -64,7 +56,7 @@ class BaseSconeClient:
     @lru_cache(maxsize=512)
     def send(self, sentence):
         line = self.get_line()
-        assert line == PROMPT, line
+        assert line == PROMPT, "'{}'".format(line)
 
         sentence = sentence.strip()
         if sentence[0] != '(' or sentence[-1] != ')':
@@ -134,21 +126,6 @@ class BaseSconeClient:
         pass
 
 
-class PipeSconeClient(BaseSconeClient):
-    def __init__(self, stdin, stdout):
-        super().__init__()
-        self.stdin = stdin
-        self.stdout = stdout
-
-    def read(self):
-        return self.stdin.read()
-
-    def write(self, msg):
-        written = 0
-        while written < len(msg):
-            written += self.stdout.write(msg[written:])
-
-
 class SconeClient(BaseSconeClient):
     def __init__(self, host='localhost', port=6517):
         super().__init__()
@@ -164,3 +141,18 @@ class SconeClient(BaseSconeClient):
 
     def write(self, msg):
         self.sock.sendall(msg.encode(ENCODING))
+
+
+class PipeSconeClient(BaseSconeClient):
+    def __init__(self, stdin, stdout):
+        super().__init__()
+        self.stdin = stdin
+        self.stdout = stdout
+
+    def read(self):
+        return self.stdout.read()
+
+    def write(self, msg):
+        written = 0
+        while written < len(msg):
+            written += self.stdin.write(msg[written:])
