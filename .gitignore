@@ -1,3 +1,4 @@
-.scone/server.log
 **/__pycache__
-
+.scone
+.gitignore
+.noseids

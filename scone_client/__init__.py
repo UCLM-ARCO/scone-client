@@ -14,6 +14,8 @@ SCONE_ERROR = '*****SCONE-ERROR*****'
 
 __all__ = 'SconeClient SconeError'.split()
 
+# logging.getLogger().setLevel(logging.DEBUG)
+
 
 class SconeError(Exception):
     def __eq__(self, other):
@@ -141,18 +143,3 @@ class SconeClient(BaseSconeClient):
 
     def write(self, msg):
         self.sock.sendall(msg.encode(ENCODING))
-
-
-class PipeSconeClient(BaseSconeClient):
-    def __init__(self, stdin, stdout):
-        super().__init__()
-        self.stdin = stdin
-        self.stdout = stdout
-
-    def read(self):
-        return self.stdout.read()
-
-    def write(self, msg):
-        written = 0
-        while written < len(msg):
-            written += self.stdin.write(msg[written:])

@@ -121,9 +121,9 @@ class ClientTests(TestCase, SubProcessMixin):
         self.assertEquals('MAYBE',
                           self.sut.sentence('(is-x-a-y? {Lucia} {tiger})'))
 
-#     def test_checkpoint(self):
-#         response = self.sut.sentence('(new-indv {Mork} {mammal})')
-#         assert_that(response, is_('{Mork}'))
-#
-#         response = self.sut.sentence('(checkpoint-new "/tmp/kkk.lisp")')
-#         assert_that(response, is_('NIL'))
+    def test_checkpoint(self):
+        response = self.sut.sentence('(new-indv {Mork} {mammal})')
+        assert_that(response, is_('{Mork}'))
+
+        response = self.sut.sentence('(checkpoint-new "/tmp/kkk.lisp")')
+        assert_that(response, is_('NIL'))
