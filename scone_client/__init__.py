@@ -1,11 +1,16 @@
 #!/usr/bin/python3
 # -*- coding: utf-8; mode: python -*-
 
+import os
 import socket
 from functools import lru_cache
 import logging
 import uuid
 import re
+
+LOCAL_KNOWLEDGE_DIR = 'scone-knowledge.d'
+SNAPSHOT_DIR = 'snapshots'
+
 
 BUFFERSIZE = 8192
 ENCODING = 'utf-8'
@@ -14,7 +19,22 @@ SCONE_ERROR = '*****SCONE-ERROR*****'
 
 __all__ = 'SconeClient SconeError'.split()
 
-# logging.getLogger().setLevel(logging.DEBUG)
+logging.getLogger().setLevel(logging.DEBUG)
+
+
+def iterate_files(path, callback):
+    def walk(path):
+        for root, dirs, files in os.walk(path):
+            files = [x for x in sorted(files) if x.endswith('.lisp')]
+            dirs.sort()
+            if SNAPSHOT_DIR in dirs:
+                del dirs[dirs.index(SNAPSHOT_DIR)]
+
+            for f in files:
+                callback(os.path.join(root, f))
+
+    walk(path)
+    walk(os.path.join(path, SNAPSHOT_DIR))
 
 
 class SconeError(Exception):
@@ -25,9 +45,43 @@ class SconeError(Exception):
         return hash(id(self))
 
 
-class BaseSconeClient:
-    def __init__(self):
+
+class SconeClient:
+    def __init__(self, host='localhost', port=6517):
+        super().__init__()
         self.buff = ''
+        self.sock = socket.socket()
+        self.sock.connect((host, port))
+        self.load_local_knowledge()
+
+    def close(self):
+        self.sock.shutdown(socket.SHUT_RDWR)
+        self.sock.close()
+
+    def read(self):
+        return self.sock.recv(BUFFERSIZE).decode(ENCODING)
+
+    def write(self, msg):
+        self.sock.sendall(msg.encode(ENCODING))
+
+    def load_local_knowledge(self):
+        print(os.getcwd())
+        if not os.path.exists(LOCAL_KNOWLEDGE_DIR):
+            return
+
+        logging.info("Uploading local knowledge...")
+        iterate_files(LOCAL_KNOWLEDGE_DIR, self.load_local_file)
+
+    def load_local_file(self, fname):
+        logging.info("Loading '{}'".format(fname))
+
+        try:
+            sentence = '(load-kb "{}")'.format(os.path.abspath(fname))
+            print(sentence)
+            self.sentence(sentence)
+        except SconeError as e:
+            logging.error("{} returns '{}'".format(fname, e))
+            raise SystemExit("Error loading '{}'.".format(fname))
 
     def get_line(self):
         self.buff = self.buff.lstrip()
@@ -117,29 +171,3 @@ class BaseSconeClient:
             reply = re.sub('\s+',' ', reply.strip())
             msg = reply.split('Error:')[1].strip('.')
             raise SconeError(msg)
-
-    def read(self):
-        raise NotImplementedError
-
-    def write(self, msg):
-        raise NotImplementedError
-
-    def close(self):
-        pass
-
-
-class SconeClient(BaseSconeClient):
-    def __init__(self, host='localhost', port=6517):
-        super().__init__()
-        self.sock = socket.socket()
-        self.sock.connect((host, port))
-
-    def close(self):
-        self.sock.shutdown(socket.SHUT_RDWR)
-        self.sock.close()
-
-    def read(self):
-        return self.sock.recv(BUFFERSIZE).decode(ENCODING)
-
-    def write(self, msg):
-        self.sock.sendall(msg.encode(ENCODING))

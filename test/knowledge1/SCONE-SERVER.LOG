@@ -1,0 +1,2997 @@
+Beginning server load process...Threading support detected
+Loading ip-server.lisp...
+
+; file: /usr/share/scone-server/src/ip-server.lisp
+; in: DEFMETHOD HANDLE-CLIENT (SB-BSD-SOCKETS:INET-SOCKET)
+;     (LET* ((CLIENT-STREAM
+;             (SB-BSD-SOCKETS:SOCKET-MAKE-STREAM SOCKET :INPUT T :OUTPUT T
+;                                                :ELEMENT-TYPE 'CHARACTER
+;                                                :BUFFERING :FULL :EXTERNAL-FORMAT
+;                                                :US-ASCII))
+;            (S
+;             (MAKE-ARRAY 4096 :FILL-POINTER 0 :ADJUSTABLE T :ELEMENT-TYPE
+;                         'CHARACTER))
+;            (*INPUT-FROM-CLIENT* CLIENT-STREAM)
+;            (*OUTPUT-TO-CLIENT* CLIENT-STREAM)
+;            (*SHOW-STREAM* *OUTPUT-TO-CLIENT*)
+;            (*DISCONNECT* NIL))
+;       (HANDLER-CASE
+;        (PROGN
+;         (PROGN
+;          (FORMAT *LOG-STREAM*
+;                  "~A: Preparing for new client (multi-threading enabled)...~%" #)
+;          (SETF #)
+;          (SETF #)
+;          (SETF #))
+;         (COND (# # #) (T # #))
+;         (SETF *SHOW-STREAM* *OUTPUT-TO-CLIENT*)
+;         (SETF *COMMENTATARY-STREAM* *OUTPUT-TO-CLIENT*)
+;         (INNER-SESSION-LOOP)
+;         (SETF # 0)
+;         (CLOSE CLIENT-STREAM)
+;         (FORMAT *LOG-STREAM* "~A: Closing client connection.~%" (CURRENT-TIME))
+;         (FINISH-OUTPUT *LOG-STREAM*)
+;         (SB-BSD-SOCKETS:SOCKET-CLOSE SOCKET)
+;         (FORMAT *LOG-STREAM* "~A: Socket closed.~%" (CURRENT-TIME))
+;         ...)
+;        (ERROR (E)
+;               (PROGN
+;                (FORMAT *LOG-STREAM*
+;                        "~A: Error in handle client. Disconnecting. Error: ~S~%" #
+;                        E)
+;                (CLOSE CLIENT-STREAM :ABORT T)
+;                (SB-BSD-SOCKETS:SOCKET-CLOSE SOCKET)))))
+; 
+; caught STYLE-WARNING:
+;   using the lexical binding of the symbol (COMMON-LISP-USER::*SHOW-STREAM*), not the
+;   dynamic binding, even though the name follows
+;   the usual naming convention (names like *FOO*) for special variables
+
+; file: /usr/share/scone-server/src/ip-server.lisp
+; in: DEFMETHOD HANDLE-CLIENT (SB-BSD-SOCKETS:INET-SOCKET)
+;     (SETF *COMMENTATARY-STREAM* *OUTPUT-TO-CLIENT*)
+; ==>
+;   (SETQ *COMMENTATARY-STREAM* *OUTPUT-TO-CLIENT*)
+; 
+; caught WARNING:
+;   undefined variable: *COMMENTATARY-STREAM*
+; 
+; compilation unit finished
+;   Undefined variable:
+;     *COMMENTATARY-STREAM*
+;   caught 1 WARNING condition
+;   caught 1 STYLE-WARNING condition
+
+; file: /usr/share/scone-server/src/ip-server.lisp
+; in: DEFUN START
+;     (DEFUN START (&KEY (PORT *DEFAULT-PORT*) (XML NIL))
+;       "Start a Scone server with threading support"
+;       (SETF *ERROR-OUTPUT-REF* *ERROR-OUTPUT*)
+;       (SETF *STANDARD-OUTPUT-REF* *STANDARD-OUTPUT*)
+;       (SETF *TRACE-OUTPUT-REF* *TRACE-OUTPUT*)
+;       (SETF MYSERVER-THREAD
+;               (SB-THREAD:MAKE-THREAD (LAMBDA # #) :NAME "SconeServer"))
+;       (DO ((X (SLEEP 10000) (SLEEP 10000))) (NIL)))
+; 
+; caught STYLE-WARNING:
+;   The variable XML is defined but never used.
+
+; in: DEFUN START
+;     (SETF MYSERVER-THREAD
+;             (SB-THREAD:MAKE-THREAD (LAMBDA () (RUN :PORT PORT)) :NAME
+;                                    "SconeServer"))
+; ==>
+;   (SETQ MYSERVER-THREAD
+;           (SB-THREAD:MAKE-THREAD (LAMBDA () (RUN :PORT PORT)) :NAME
+;                                  "SconeServer"))
+; 
+; caught WARNING:
+;   undefined variable: MYSERVER-THREAD
+; 
+; compilation unit finished
+;   Undefined variable:
+;     MYSERVER-THREAD
+;   caught 1 WARNING condition
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN STOP
+;     (LET ((ST MYSERVER-THREAD))
+;       (COND
+;        ((THREAD-ALIVE-P ST) (WRITE-LINE "Server stopped.") (TERMINATE-THREAD ST))
+;        (T (WRITE-LINE "Server is not running.") NIL)))
+; 
+; caught WARNING:
+;   undefined variable: MYSERVER-THREAD
+
+;     (TERMINATE-THREAD ST)
+; 
+; caught STYLE-WARNING:
+;   undefined function: TERMINATE-THREAD
+
+;     (THREAD-ALIVE-P ST)
+; 
+; caught STYLE-WARNING:
+;   undefined function: THREAD-ALIVE-P
+; 
+; compilation unit finished
+;   Undefined functions:
+;     TERMINATE-THREAD THREAD-ALIVE-P
+;   Undefined variable:
+;     MYSERVER-THREAD
+;   caught 1 WARNING condition
+;   caught 2 STYLE-WARNING conditions
+
+
+; file: /usr/share/scone/engine.lisp
+; in: DEFUN FREE-MARKER
+;     (CLEAR-MARKER-PAIR M)
+; 
+; caught STYLE-WARNING:
+;   undefined function: CLEAR-MARKER-PAIR
+; 
+; compilation unit finished
+;   Undefined function:
+;     CLEAR-MARKER-PAIR
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFSTRUCT ELEMENT
+;     (DEFSTRUCT
+;         (ELEMENT (:CONSTRUCTOR INTERNAL-MAKE-ELEMENT) (:CONC-NAME NIL)
+;          (:PRINT-FUNCTION PRINT-ELEMENT))
+;       (BITS 0 :TYPE FIXNUM)
+;       (FLAGS 0 :TYPE FIXNUM)
+;       (PARENT-WIRE NIL)
+;       (CONTEXT-WIRE NIL)
+;       (A-WIRE NIL)
+;       (B-WIRE NIL)
+;       (C-WIRE NIL)
+;       (SPLIT-WIRES NIL :TYPE LIST)
+;       (INCOMING-PARENT-WIRES NIL :TYPE LIST)
+;       (INCOMING-CONTEXT-WIRES NIL :TYPE LIST)
+;       ...)
+; --> PROGN LET* SB-INT:NAMED-LAMBDA FUNCTION SYMBOL-MACROLET 
+; --> SB-PCL::FAST-LEXICAL-METHOD-FUNCTIONS 
+; --> SB-PCL::BIND-FAST-LEXICAL-METHOD-FUNCTIONS FLET SB-PCL::BIND-ARGS LET* 
+; --> LOCALLY SYMBOL-MACROLET BLOCK FUNCALL 
+; ==>
+;   (SB-C::%FUNCALL #'PRINT-ELEMENT #:OBJECT #:STREAM
+;                   SB-KERNEL:*CURRENT-LEVEL-IN-PRINT*)
+; 
+; caught STYLE-WARNING:
+;   undefined function: PRINT-ELEMENT
+; 
+; compilation unit finished
+;   Undefined function:
+;     PRINT-ELEMENT
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFSTRUCT ELEMENT-INAME
+;     (DEFSTRUCT (ELEMENT-INAME (:PRINT-FUNCTION PRINT-ELEMENT-INAME))
+;       "Each curly-brace element reference encountered by the reader turns
+;      into one of these structures before being converted into an actual
+;      element."
+;       (TYPE :ELEMENT)
+;       (VALUE))
+; --> PROGN LET* SB-INT:NAMED-LAMBDA FUNCTION SYMBOL-MACROLET 
+; --> SB-PCL::FAST-LEXICAL-METHOD-FUNCTIONS 
+; --> SB-PCL::BIND-FAST-LEXICAL-METHOD-FUNCTIONS FLET SB-PCL::BIND-ARGS LET* 
+; --> LOCALLY SYMBOL-MACROLET BLOCK FUNCALL 
+; ==>
+;   (SB-C::%FUNCALL #'PRINT-ELEMENT-INAME #:OBJECT #:STREAM
+;                   SB-KERNEL:*CURRENT-LEVEL-IN-PRINT*)
+; 
+; caught STYLE-WARNING:
+;   undefined function: PRINT-ELEMENT-INAME
+; 
+; compilation unit finished
+;   Undefined function:
+;     PRINT-ELEMENT-INAME
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFMETHOD DESCRIBE-OBJECT (ELEMENT-INAME T)
+;     (LOOKUP-ELEMENT OBJ)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT
+; 
+; compilation unit finished
+;   Undefined function:
+;     LOOKUP-ELEMENT
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN MAKE-ELEMENT
+;     (CONNECT-WIRE :PARENT E PARENT T T)
+; 
+; caught STYLE-WARNING:
+;   undefined function: CONNECT-WIRE
+
+;     (ENGLISH-INTERNAL E ENGLISH)
+; 
+; caught STYLE-WARNING:
+;   undefined function: ENGLISH-INTERNAL
+
+;     (LOOKUP-ELEMENT INAME)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT
+
+;     (REGISTER-INTERNAL-NAME INAME E)
+; 
+; caught STYLE-WARNING:
+;   undefined function: REGISTER-INTERNAL-NAME
+
+;     (SET-DEFINITION E DEFINITION T)
+; 
+; caught STYLE-WARNING:
+;   undefined function: SET-DEFINITION
+
+;     (SET-PROPERTIES E PROPERTIES T)
+; 
+; caught STYLE-WARNING:
+;   undefined function: SET-PROPERTIES
+; 
+; compilation unit finished
+;   Undefined functions:
+;     CONNECT-WIRE ENGLISH-INTERNAL LOOKUP-ELEMENT REGISTER-INTERNAL-NAME SET-DEFINITION SET-PROPERTIES
+;   caught 6 STYLE-WARNING conditions
+
+; in: DEFUN SET-DEFINITION
+;     (LOOKUP-ELEMENT-TEST E)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT-TEST
+; 
+; compilation unit finished
+;   Undefined function:
+;     LOOKUP-ELEMENT-TEST
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN SET-PROPERTIES
+;     (LOOKUP-ELEMENT-TEST E)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT-TEST
+; 
+; compilation unit finished
+;   Undefined function:
+;     LOOKUP-ELEMENT-TEST
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN NEXT-ELEMENT
+;     (LOOKUP-ELEMENT-TEST E)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT-TEST
+; 
+; compilation unit finished
+;   Undefined function:
+;     LOOKUP-ELEMENT-TEST
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN PREVIOUS-ELEMENT
+;     (LOOKUP-ELEMENT-TEST E)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT-TEST
+; 
+; compilation unit finished
+;   Undefined function:
+;     LOOKUP-ELEMENT-TEST
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN A-ELEMENT
+;     (LOOKUP-ELEMENT-TEST E)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT-TEST
+; 
+; compilation unit finished
+;   Undefined function:
+;     LOOKUP-ELEMENT-TEST
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN B-ELEMENT
+;     (LOOKUP-ELEMENT-TEST E)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT-TEST
+; 
+; compilation unit finished
+;   Undefined function:
+;     LOOKUP-ELEMENT-TEST
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN C-ELEMENT
+;     (LOOKUP-ELEMENT-TEST E)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT-TEST
+; 
+; compilation unit finished
+;   Undefined function:
+;     LOOKUP-ELEMENT-TEST
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN PARENT-ELEMENT
+;     (LOOKUP-ELEMENT-TEST E)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT-TEST
+; 
+; compilation unit finished
+;   Undefined function:
+;     LOOKUP-ELEMENT-TEST
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN CONTEXT-ELEMENT
+;     (LOOKUP-ELEMENT-TEST E)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT-TEST
+; 
+; compilation unit finished
+;   Undefined function:
+;     LOOKUP-ELEMENT-TEST
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN SPLIT-ELEMENTS
+;     (LOOKUP-ELEMENT-TEST E)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT-TEST
+; 
+; compilation unit finished
+;   Undefined function:
+;     LOOKUP-ELEMENT-TEST
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN INCOMING-A-ELEMENTS
+;     (LOOKUP-ELEMENT-TEST E)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT-TEST
+; 
+; compilation unit finished
+;   Undefined function:
+;     LOOKUP-ELEMENT-TEST
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN INCOMING-B-ELEMENTS
+;     (LOOKUP-ELEMENT-TEST E)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT-TEST
+; 
+; compilation unit finished
+;   Undefined function:
+;     LOOKUP-ELEMENT-TEST
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN INCOMING-C-ELEMENTS
+;     (LOOKUP-ELEMENT-TEST E)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT-TEST
+; 
+; compilation unit finished
+;   Undefined function:
+;     LOOKUP-ELEMENT-TEST
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN INCOMING-PARENT-ELEMENTS
+;     (LOOKUP-ELEMENT-TEST E)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT-TEST
+; 
+; compilation unit finished
+;   Undefined function:
+;     LOOKUP-ELEMENT-TEST
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN INCOMING-CONTEXT-ELEMENTS
+;     (LOOKUP-ELEMENT-TEST E)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT-TEST
+; 
+; compilation unit finished
+;   Undefined function:
+;     LOOKUP-ELEMENT-TEST
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN INCOMING-SPLIT-ELEMENTS
+;     (LOOKUP-ELEMENT-TEST E)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT-TEST
+; 
+; compilation unit finished
+;   Undefined function:
+;     LOOKUP-ELEMENT-TEST
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN WIRE
+;     (LOOKUP-ELEMENT-TEST E)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT-TEST
+; 
+; compilation unit finished
+;   Undefined function:
+;     LOOKUP-ELEMENT-TEST
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN INCOMING-WIRES
+;     (LOOKUP-ELEMENT-TEST E)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT-TEST
+; 
+; compilation unit finished
+;   Undefined function:
+;     LOOKUP-ELEMENT-TEST
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN CONNECT-WIRE => DEFER-CONNECTION WIRE-NAME
+;     (DEFER-CONNECTION WIRE-NAME FROM TO)
+; 
+; caught STYLE-WARNING:
+;   undefined function: DEFER-CONNECTION
+
+; in: DEFUN CONNECT-WIRE
+;     (DISCONNECT-WIRE WIRE-NAME FROM T)
+; 
+; caught STYLE-WARNING:
+;   undefined function: DISCONNECT-WIRE
+
+;     (FAST-MARK FROM *ACTIVATION-MARKER*)
+; 
+; caught STYLE-WARNING:
+;   undefined function: FAST-MARK
+
+;     (LOOKUP-ELEMENT-OR-DEFER TO)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT-OR-DEFER
+
+;     (LOOKUP-ELEMENT-TEST FROM)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT-TEST
+
+;     (NEW-TYPE TO *UNDEFINED-THING*)
+; 
+; caught STYLE-WARNING:
+;   undefined function: NEW-TYPE
+; 
+; compilation unit finished
+;   Undefined functions:
+;     DEFER-CONNECTION DISCONNECT-WIRE FAST-MARK LOOKUP-ELEMENT-OR-DEFER LOOKUP-ELEMENT-TEST NEW-TYPE
+;   caught 6 STYLE-WARNING conditions
+
+; in: DEFUN DISCONNECT-WIRE
+;     (LOOKUP-ELEMENT-TEST FROM)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT-TEST
+; 
+; compilation unit finished
+;   Undefined function:
+;     LOOKUP-ELEMENT-TEST
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN DISCONNECT-SPLIT-WIRE
+;     (LOOKUP-ELEMENT-TEST FROM)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT-TEST
+; 
+; compilation unit finished
+;   Undefined function:
+;     LOOKUP-ELEMENT-TEST
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN DISCONNECT-SPLIT-WIRES
+;     (LOOKUP-ELEMENT-TEST FROM)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT-TEST
+; 
+; compilation unit finished
+;   Undefined function:
+;     LOOKUP-ELEMENT-TEST
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN CONVERT-PARENT-WIRE-TO-LINK
+;     (LOOKUP-ELEMENT-TEST E)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT-TEST
+
+;     (NEW-IS-A E OLD-PARENT :CONTEXT CONTEXT)
+; 
+; caught STYLE-WARNING:
+;   undefined function: NEW-IS-A
+; 
+; compilation unit finished
+;   Undefined functions:
+;     LOOKUP-ELEMENT-TEST NEW-IS-A
+;   caught 2 STYLE-WARNING conditions
+
+; in: DEFUN NODE?
+;     (LOOKUP-ELEMENT E)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT
+; 
+; compilation unit finished
+;   Undefined function:
+;     LOOKUP-ELEMENT
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN LINK?
+;     (LOOKUP-ELEMENT E)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT
+; 
+; compilation unit finished
+;   Undefined function:
+;     LOOKUP-ELEMENT
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN DEFINED-TYPE?
+;     (LOOKUP-ELEMENT E)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT
+; 
+; compilation unit finished
+;   Undefined function:
+;     LOOKUP-ELEMENT
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN KILLED?
+;     (LOOKUP-ELEMENT E)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT
+; 
+; compilation unit finished
+;   Undefined function:
+;     LOOKUP-ELEMENT
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN INDV-NODE?
+;     (LOOKUP-ELEMENT E)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT
+; 
+; compilation unit finished
+;   Undefined function:
+;     LOOKUP-ELEMENT
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN PROPER-INDV-NODE?
+;     (LOOKUP-ELEMENT E)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT
+; 
+; compilation unit finished
+;   Undefined function:
+;     LOOKUP-ELEMENT
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN GENERIC-INDV-NODE?
+;     (LOOKUP-ELEMENT E)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT
+; 
+; compilation unit finished
+;   Undefined function:
+;     LOOKUP-ELEMENT
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN DEFINED-INDV-NODE?
+;     (LOOKUP-ELEMENT E)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT
+; 
+; compilation unit finished
+;   Undefined function:
+;     LOOKUP-ELEMENT
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN NEW-INDV
+;     (CHECK-DEFINED-TYPE-MEMBERSHIPS E)
+; 
+; caught STYLE-WARNING:
+;   undefined function: CHECK-DEFINED-TYPE-MEMBERSHIPS
+
+;     (CONVERT-TYPE-TO-INDV THIS-ELEMENT)
+; 
+; caught STYLE-WARNING:
+;   undefined function: CONVERT-TYPE-TO-INDV
+
+;     (GEN-INAME (INTERNAL-NAME PARENT))
+; 
+; caught STYLE-WARNING:
+;   undefined function: GEN-INAME
+
+;     (INCOMPATIBLE? THIS-ELEMENT PARENT)
+; 
+; caught STYLE-WARNING:
+;   undefined function: INCOMPATIBLE?
+
+;     (LOOKUP-ELEMENT INAME)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT
+
+;     (LOOKUP-ELEMENT-OR-DEFER PARENT)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT-OR-DEFER
+
+;     (NEW-HAS CONTEXT E :N *ONE*)
+; 
+; caught STYLE-WARNING:
+;   undefined function: NEW-HAS
+; 
+; compilation unit finished
+;   Undefined functions:
+;     CHECK-DEFINED-TYPE-MEMBERSHIPS CONVERT-TYPE-TO-INDV GEN-INAME INCOMPATIBLE? LOOKUP-ELEMENT LOOKUP-ELEMENT-OR-DEFER NEW-HAS
+;   caught 7 STYLE-WARNING conditions
+
+; in: DEFUN NEW-CONTEXT
+;     (LOOKUP-ELEMENT-TEST (CAR PARENTS))
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT-TEST
+
+;     (NEW-IS-A NEW-CONTEXT P)
+; 
+; caught STYLE-WARNING:
+;   undefined function: NEW-IS-A
+; 
+; compilation unit finished
+;   Undefined functions:
+;     LOOKUP-ELEMENT-TEST NEW-IS-A
+;   caught 2 STYLE-WARNING conditions
+
+; in: DEFUN PRIMITIVE-NODE?
+;     (LOOKUP-ELEMENT E)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT
+; 
+; compilation unit finished
+;   Undefined function:
+;     LOOKUP-ELEMENT
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN NEW-PRIMITIVE-NODE
+;     (CHECK-DEFINED-TYPE-MEMBERSHIPS E)
+; 
+; caught STYLE-WARNING:
+;   undefined function: CHECK-DEFINED-TYPE-MEMBERSHIPS
+; 
+; compilation unit finished
+;   Undefined function:
+;     CHECK-DEFINED-TYPE-MEMBERSHIPS
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN NODE-VALUE
+;     (INAME E)
+; 
+; caught STYLE-WARNING:
+;   undefined function: INAME
+; 
+; compilation unit finished
+;   Undefined function:
+;     INAME
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN NUMBER-NODE?
+;     (LOOKUP-ELEMENT E)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT
+; 
+; compilation unit finished
+;   Undefined function:
+;     LOOKUP-ELEMENT
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN INTEGER-NODE?
+;     (LOOKUP-ELEMENT E)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT
+; 
+; compilation unit finished
+;   Undefined function:
+;     LOOKUP-ELEMENT
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN RATIO-NODE?
+;     (LOOKUP-ELEMENT E)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT
+; 
+; compilation unit finished
+;   Undefined function:
+;     LOOKUP-ELEMENT
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN FLOAT-NODE?
+;     (LOOKUP-ELEMENT E)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT
+; 
+; compilation unit finished
+;   Undefined function:
+;     LOOKUP-ELEMENT
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN STRING-NODE?
+;     (LOOKUP-ELEMENT E)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT
+; 
+; compilation unit finished
+;   Undefined function:
+;     LOOKUP-ELEMENT
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN FUNCTION-NODE?
+;     (LOOKUP-ELEMENT E)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT
+; 
+; compilation unit finished
+;   Undefined function:
+;     LOOKUP-ELEMENT
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN STRUCT-NODE?
+;     (LOOKUP-ELEMENT E)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT
+; 
+; compilation unit finished
+;   Undefined function:
+;     LOOKUP-ELEMENT
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN TYPE-NODE?
+;     (LOOKUP-ELEMENT E)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT
+; 
+; compilation unit finished
+;   Undefined function:
+;     LOOKUP-ELEMENT
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN NEW-TYPE
+;     (CHECK-DEFINED-TYPE-MEMBERSHIPS E)
+; 
+; caught STYLE-WARNING:
+;   undefined function: CHECK-DEFINED-TYPE-MEMBERSHIPS
+
+;     (GEN-INAME (INTERNAL-NAME PARENT))
+; 
+; caught STYLE-WARNING:
+;   undefined function: GEN-INAME
+
+;     (INCOMPATIBLE? THIS-ELEMENT PARENT)
+; 
+; caught STYLE-WARNING:
+;   undefined function: INCOMPATIBLE?
+
+;     (LOOKUP-ELEMENT INAME)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT
+
+;     (LOOKUP-ELEMENT-OR-DEFER PARENT)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT-OR-DEFER
+
+;     (NEW-HAS CONTEXT E :N N)
+; 
+; caught STYLE-WARNING:
+;   undefined function: NEW-HAS
+; 
+; compilation unit finished
+;   Undefined functions:
+;     CHECK-DEFINED-TYPE-MEMBERSHIPS GEN-INAME INCOMPATIBLE? LOOKUP-ELEMENT LOOKUP-ELEMENT-OR-DEFER NEW-HAS
+;   caught 6 STYLE-WARNING conditions
+
+; in: DEFUN CONVERT-TYPE-TO-INDV
+;     (LOOKUP-ELEMENT E)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT
+; 
+; compilation unit finished
+;   Undefined function:
+;     LOOKUP-ELEMENT
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN GET-SET-NODE
+;     (GEN-INAME (FORMAT NIL "SET-NODE ~A" (INTERNAL-NAME E)))
+; 
+; caught STYLE-WARNING:
+;   undefined function: GEN-INAME
+
+;     (LOOKUP-ELEMENT-TEST E)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT-TEST
+; 
+; compilation unit finished
+;   Undefined functions:
+;     GEN-INAME LOOKUP-ELEMENT-TEST
+;   caught 2 STYLE-WARNING conditions
+
+; in: DEFUN GET-TYPE-NODE
+;     (LOOKUP-ELEMENT-TEST E)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT-TEST
+; 
+; compilation unit finished
+;   Undefined function:
+;     LOOKUP-ELEMENT-TEST
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN MAP-NODE?
+;     (LOOKUP-ELEMENT E)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT
+; 
+; compilation unit finished
+;   Undefined function:
+;     LOOKUP-ELEMENT
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN INDV-MAP-NODE?
+;     (LOOKUP-ELEMENT E)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT
+; 
+; compilation unit finished
+;   Undefined function:
+;     LOOKUP-ELEMENT
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN TYPE-MAP-NODE?
+;     (LOOKUP-ELEMENT E)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT
+; 
+; compilation unit finished
+;   Undefined function:
+;     LOOKUP-ELEMENT
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN NEW-MAP
+;     (ADD-DERIVED-LINKS-MAP NEW-MAP-NODE)
+; 
+; caught STYLE-WARNING:
+;   undefined function: ADD-DERIVED-LINKS-MAP
+
+;     (GEN-INAME (FORMAT NIL "~A of ~A" STRING1 STRING2))
+; 
+; caught STYLE-WARNING:
+;   undefined function: GEN-INAME
+
+;     (LOOKUP-ELEMENT-TEST ROLE)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT-TEST
+; 
+; compilation unit finished
+;   Undefined functions:
+;     ADD-DERIVED-LINKS-MAP GEN-INAME LOOKUP-ELEMENT-TEST
+;   caught 3 STYLE-WARNING conditions
+
+; in: DEFUN IS-A-LINK?
+;     (LOOKUP-ELEMENT E)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT
+; 
+; compilation unit finished
+;   Undefined function:
+;     LOOKUP-ELEMENT
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN DERIVED-IS-A-LINK?
+;     (LOOKUP-ELEMENT E)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT
+; 
+; compilation unit finished
+;   Undefined function:
+;     LOOKUP-ELEMENT
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN NEW-IS-A
+;     (ADD-DERIVED-LINKS-IS-A LINK)
+; 
+; caught STYLE-WARNING:
+;   undefined function: ADD-DERIVED-LINKS-IS-A
+
+;     (CHECK-DEFINED-TYPE-MEMBERSHIPS A)
+; 
+; caught STYLE-WARNING:
+;   undefined function: CHECK-DEFINED-TYPE-MEMBERSHIPS
+
+;     (GEN-INAME (FORMAT NIL "~A is-a ~A" (INTERNAL-NAME A) (INTERNAL-NAME B)))
+; 
+; caught STYLE-WARNING:
+;   undefined function: GEN-INAME
+
+;     (INCOMPATIBLE? A B)
+; 
+; caught STYLE-WARNING:
+;   undefined function: INCOMPATIBLE?
+
+;     (LOOKUP-ELEMENT-OR-DEFER A)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT-OR-DEFER
+; 
+; compilation unit finished
+;   Undefined functions:
+;     ADD-DERIVED-LINKS-IS-A CHECK-DEFINED-TYPE-MEMBERSHIPS GEN-INAME INCOMPATIBLE? LOOKUP-ELEMENT-OR-DEFER
+;   caught 5 STYLE-WARNING conditions
+
+; in: DEFUN IS-NOT-A-LINK?
+;     (LOOKUP-ELEMENT E)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT
+; 
+; compilation unit finished
+;   Undefined function:
+;     LOOKUP-ELEMENT
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN NEW-IS-NOT-A
+;     (GEN-INAME (FORMAT NIL "~A is-not-a ~A" (INTERNAL-NAME A) (INTERNAL-NAME B)))
+; 
+; caught STYLE-WARNING:
+;   undefined function: GEN-INAME
+
+;     (LOOKUP-ELEMENT-OR-DEFER A)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT-OR-DEFER
+; 
+; compilation unit finished
+;   Undefined functions:
+;     GEN-INAME LOOKUP-ELEMENT-OR-DEFER
+;   caught 2 STYLE-WARNING conditions
+
+; in: DEFUN EQ-LINK?
+;     (LOOKUP-ELEMENT E)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT
+; 
+; compilation unit finished
+;   Undefined function:
+;     LOOKUP-ELEMENT
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN NEW-EQ
+;     (ADD-DERIVED-LINKS-EQ LINK)
+; 
+; caught STYLE-WARNING:
+;   undefined function: ADD-DERIVED-LINKS-EQ
+
+;     (CHECK-DEFINED-TYPE-MEMBERSHIPS A)
+; 
+; caught STYLE-WARNING:
+;   undefined function: CHECK-DEFINED-TYPE-MEMBERSHIPS
+
+;     (GEN-INAME (FORMAT NIL "~A eq ~A" (INTERNAL-NAME A) (INTERNAL-NAME B)))
+; 
+; caught STYLE-WARNING:
+;   undefined function: GEN-INAME
+
+;     (INCOMPATIBLE? A B)
+; 
+; caught STYLE-WARNING:
+;   undefined function: INCOMPATIBLE?
+
+;     (LOOKUP-ELEMENT-OR-DEFER A)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT-OR-DEFER
+; 
+; compilation unit finished
+;   Undefined functions:
+;     ADD-DERIVED-LINKS-EQ CHECK-DEFINED-TYPE-MEMBERSHIPS GEN-INAME INCOMPATIBLE? LOOKUP-ELEMENT-OR-DEFER
+;   caught 5 STYLE-WARNING conditions
+
+; in: DEFUN NOT-EQ-LINK?
+;     (LOOKUP-ELEMENT E)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT
+; 
+; compilation unit finished
+;   Undefined function:
+;     LOOKUP-ELEMENT
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN NEW-NOT-EQ
+;     (GEN-INAME (FORMAT NIL "~A not eq ~A" (INTERNAL-NAME A) (INTERNAL-NAME B)))
+; 
+; caught STYLE-WARNING:
+;   undefined function: GEN-INAME
+
+;     (LOOKUP-ELEMENT-OR-DEFER A)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT-OR-DEFER
+; 
+; compilation unit finished
+;   Undefined functions:
+;     GEN-INAME LOOKUP-ELEMENT-OR-DEFER
+;   caught 2 STYLE-WARNING conditions
+
+; in: DEFUN HAS-LINK?
+;     (LOOKUP-ELEMENT E)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT
+; 
+; compilation unit finished
+;   Undefined function:
+;     LOOKUP-ELEMENT
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN NEW-HAS
+;     (GEN-INAME (FORMAT NIL "~A has ~A" (INTERNAL-NAME A) (INTERNAL-NAME B)))
+; 
+; caught STYLE-WARNING:
+;   undefined function: GEN-INAME
+
+;     (LOOKUP-ELEMENT-OR-DEFER A)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT-OR-DEFER
+; 
+; compilation unit finished
+;   Undefined functions:
+;     GEN-INAME LOOKUP-ELEMENT-OR-DEFER
+;   caught 2 STYLE-WARNING conditions
+
+; in: DEFUN HAS-NO-LINK?
+;     (LOOKUP-ELEMENT E)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT
+; 
+; compilation unit finished
+;   Undefined function:
+;     LOOKUP-ELEMENT
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN NEW-HAS-NO
+;     (GEN-INAME (FORMAT NIL "~A has-no ~A" (INTERNAL-NAME A) (INTERNAL-NAME B)))
+; 
+; caught STYLE-WARNING:
+;   undefined function: GEN-INAME
+
+;     (LOOKUP-ELEMENT-OR-DEFER A)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT-OR-DEFER
+; 
+; compilation unit finished
+;   Undefined functions:
+;     GEN-INAME LOOKUP-ELEMENT-OR-DEFER
+;   caught 2 STYLE-WARNING conditions
+
+; in: DEFUN CANCEL-LINK?
+;     (LOOKUP-ELEMENT E)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT
+; 
+; compilation unit finished
+;   Undefined function:
+;     LOOKUP-ELEMENT
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN NEW-CANCEL
+;     (GEN-INAME (FORMAT NIL "~A cancels ~A" (INTERNAL-NAME A) (INTERNAL-NAME B)))
+; 
+; caught STYLE-WARNING:
+;   undefined function: GEN-INAME
+
+;     (LOOKUP-ELEMENT-OR-DEFER A)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT-OR-DEFER
+; 
+; compilation unit finished
+;   Undefined functions:
+;     GEN-INAME LOOKUP-ELEMENT-OR-DEFER
+;   caught 2 STYLE-WARNING conditions
+
+; in: DEFUN SPLIT?
+;     (LOOKUP-ELEMENT E)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT
+; 
+; compilation unit finished
+;   Undefined function:
+;     LOOKUP-ELEMENT
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN NEW-SPLIT
+;     (GEN-INAME (FORMAT NIL "split ~A ~A" S1 S2))
+; 
+; caught STYLE-WARNING:
+;   undefined function: GEN-INAME
+
+;     (LOOKUP-ELEMENT-TEST M)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT-TEST
+; 
+; compilation unit finished
+;   Undefined functions:
+;     GEN-INAME LOOKUP-ELEMENT-TEST
+;   caught 2 STYLE-WARNING conditions
+
+; in: DEFUN ADD-TO-SPLIT
+;     (LOOKUP-ELEMENT-TEST SPLIT)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT-TEST
+; 
+; compilation unit finished
+;   Undefined function:
+;     LOOKUP-ELEMENT-TEST
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN COMPLETE-SPLIT?
+;     (LOOKUP-ELEMENT E)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT
+; 
+; compilation unit finished
+;   Undefined function:
+;     LOOKUP-ELEMENT
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN NEW-COMPLETE-SPLIT
+;     (GEN-INAME (FORMAT NIL "csplit ~A ~A" S1 S2))
+; 
+; caught STYLE-WARNING:
+;   undefined function: GEN-INAME
+
+;     (LOOKUP-ELEMENT-OR-DEFER SUPERTYPE)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT-OR-DEFER
+
+;     (LOOKUP-ELEMENT-TEST M)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT-TEST
+; 
+; compilation unit finished
+;   Undefined functions:
+;     GEN-INAME LOOKUP-ELEMENT-OR-DEFER LOOKUP-ELEMENT-TEST
+;   caught 3 STYLE-WARNING conditions
+
+; in: DEFUN RELATION?
+;     (LOOKUP-ELEMENT E)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT
+; 
+; compilation unit finished
+;   Undefined function:
+;     LOOKUP-ELEMENT
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN NEW-RELATION
+;     (GEN-INAME (FORMAT NIL "A-role of ~A" INAME-STRING))
+; 
+; caught STYLE-WARNING:
+;   undefined function: GEN-INAME
+
+;     (LOOKUP-ELEMENT INAME)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT
+
+;     (LOOKUP-ELEMENT-TEST A)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT-TEST
+
+;     (MERGE-ENGLISH-INVERSE ENGLISH INVERSE :INVERSE-RELATION)
+; 
+; caught STYLE-WARNING:
+;   undefined function: MERGE-ENGLISH-INVERSE
+; 
+; compilation unit finished
+;   Undefined functions:
+;     GEN-INAME LOOKUP-ELEMENT LOOKUP-ELEMENT-TEST MERGE-ENGLISH-INVERSE
+;   caught 4 STYLE-WARNING conditions
+
+; in: DEFUN SYMMETRIC?
+;     (LOOKUP-ELEMENT E)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT
+; 
+; compilation unit finished
+;   Undefined function:
+;     LOOKUP-ELEMENT
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN TRANSITIVE?
+;     (LOOKUP-ELEMENT E)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT
+; 
+; compilation unit finished
+;   Undefined function:
+;     LOOKUP-ELEMENT
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN STATEMENT?
+;     (LOOKUP-ELEMENT E)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT
+; 
+; compilation unit finished
+;   Undefined function:
+;     LOOKUP-ELEMENT
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN NEW-STATEMENT
+;     (CHECK-DEFINED-TYPE-MEMBERSHIPS AX)
+; 
+; caught STYLE-WARNING:
+;   undefined function: CHECK-DEFINED-TYPE-MEMBERSHIPS
+
+;     (GEN-INAME (INTERNAL-NAME REL))
+; 
+; caught STYLE-WARNING:
+;   undefined function: GEN-INAME
+
+;     (INCOMPATIBLE? AX REL-A)
+; 
+; caught STYLE-WARNING:
+;   undefined function: INCOMPATIBLE?
+
+;     (LOOKUP-ELEMENT REL)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT
+
+;     (LOOKUP-ELEMENT-TEST C)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT-TEST
+; 
+; compilation unit finished
+;   Undefined functions:
+;     CHECK-DEFINED-TYPE-MEMBERSHIPS GEN-INAME INCOMPATIBLE? LOOKUP-ELEMENT LOOKUP-ELEMENT-TEST
+;   caught 5 STYLE-WARNING conditions
+
+; in: DEFUN NOT-STATEMENT?
+;     (LOOKUP-ELEMENT E)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT
+; 
+; compilation unit finished
+;   Undefined function:
+;     LOOKUP-ELEMENT
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN NEW-NOT-STATEMENT
+;     (GEN-INAME (FORMAT NIL "Not ~A" (INTERNAL-NAME REL)))
+; 
+; caught STYLE-WARNING:
+;   undefined function: GEN-INAME
+
+;     (LOOKUP-ELEMENT REL)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT
+
+;     (LOOKUP-ELEMENT-TEST A)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT-TEST
+; 
+; compilation unit finished
+;   Undefined functions:
+;     GEN-INAME LOOKUP-ELEMENT LOOKUP-ELEMENT-TEST
+;   caught 3 STYLE-WARNING conditions
+
+; in: DEFUN ROLE-NODE?
+;     (LOOKUP-ELEMENT E)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT
+; 
+; compilation unit finished
+;   Undefined function:
+;     LOOKUP-ELEMENT
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN INDV-ROLE-NODE?
+;     (LOOKUP-ELEMENT E)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT
+; 
+; compilation unit finished
+;   Undefined function:
+;     LOOKUP-ELEMENT
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN TYPE-ROLE-NODE?
+;     (LOOKUP-ELEMENT E)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT
+; 
+; compilation unit finished
+;   Undefined function:
+;     LOOKUP-ELEMENT
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN NEW-INDV-ROLE
+;     (MERGE-ENGLISH-INVERSE ENGLISH INVERSE :INVERSE-ROLE)
+; 
+; caught STYLE-WARNING:
+;   undefined function: MERGE-ENGLISH-INVERSE
+; 
+; compilation unit finished
+;   Undefined function:
+;     MERGE-ENGLISH-INVERSE
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN NEW-TYPE-ROLE
+;     (MERGE-ENGLISH-INVERSE ENGLISH INVERSE :INVERSE-ROLE)
+; 
+; caught STYLE-WARNING:
+;   undefined function: MERGE-ENGLISH-INVERSE
+; 
+; compilation unit finished
+;   Undefined function:
+;     MERGE-ENGLISH-INVERSE
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN PRINT-ELEMENT
+;     (ELEMENT-NAME E)
+; 
+; caught STYLE-WARNING:
+;   undefined function: ELEMENT-NAME
+; 
+; compilation unit finished
+;   Undefined function:
+;     ELEMENT-NAME
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN GEN-INAME
+;     (STRIP-COUNTERS STRING)
+; 
+; caught STYLE-WARNING:
+;   undefined function: STRIP-COUNTERS
+; 
+; compilation unit finished
+;   Undefined function:
+;     STRIP-COUNTERS
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN NEW-DEFINED-TYPE
+;     (MAPCAR #'LOOKUP-ELEMENT-TEST SUPERTYPE-LIST)
+; --> LET LET SB-INT:DO-ANONYMOUS BLOCK LET TAGBODY TAGBODY SB-KERNEL:%RPLACD 
+; --> SETQ THE CONS FUNCALL 
+; ==>
+;   (SB-C::%FUNCALL #'LOOKUP-ELEMENT-TEST (CAR #:G2))
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT-TEST
+
+;     (POPULATE-DEFINED-TYPE DTYPE)
+; 
+; caught STYLE-WARNING:
+;   undefined function: POPULATE-DEFINED-TYPE
+; 
+; compilation unit finished
+;   Undefined functions:
+;     LOOKUP-ELEMENT-TEST POPULATE-DEFINED-TYPE
+;   caught 2 STYLE-WARNING conditions
+
+; in: DEFUN POPULATE-DEFINED-TYPE
+;     (FAST-UNMARK E M1)
+; 
+; caught STYLE-WARNING:
+;   undefined function: FAST-UNMARK
+
+;     (LOOKUP-ELEMENT-TEST E)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT-TEST
+
+;     (MARK-INTERSECTION SUPERTYPE-LIST M1)
+; 
+; caught STYLE-WARNING:
+;   undefined function: MARK-INTERSECTION
+
+;     (UPPERMOST? X M1)
+; 
+; caught STYLE-WARNING:
+;   undefined function: UPPERMOST?
+; 
+; compilation unit finished
+;   Undefined functions:
+;     FAST-UNMARK LOOKUP-ELEMENT-TEST MARK-INTERSECTION UPPERMOST?
+;   caught 4 STYLE-WARNING conditions
+
+; in: DEFUN CHECK-DEFINED-TYPE-MEMBERSHIPS
+;     (CHECK-DEFINED-TYPE-MEMBERSHIP-INTERNAL E DTYPE-TO-CHECK M)
+; 
+; caught STYLE-WARNING:
+;   undefined function: CHECK-DEFINED-TYPE-MEMBERSHIP-INTERNAL
+
+;     (LOOKUP-ELEMENT-TEST E)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT-TEST
+
+;     (UPSCAN E M)
+; 
+; caught STYLE-WARNING:
+;   undefined function: UPSCAN
+; 
+; compilation unit finished
+;   Undefined functions:
+;     CHECK-DEFINED-TYPE-MEMBERSHIP-INTERNAL LOOKUP-ELEMENT-TEST UPSCAN
+;   caught 3 STYLE-WARNING conditions
+
+; in: DEFUN CHECK-DEFINED-TYPE-MEMBERSHIP
+;     (CHECK-DEFINED-TYPE-MEMBERSHIP-INTERNAL CANDIDATE DTYPE M)
+; 
+; caught STYLE-WARNING:
+;   undefined function: CHECK-DEFINED-TYPE-MEMBERSHIP-INTERNAL
+
+;     (LOOKUP-ELEMENT-TEST CANDIDATE)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT-TEST
+
+;     (UPSCAN CANDIDATE M)
+; 
+; caught STYLE-WARNING:
+;   undefined function: UPSCAN
+; 
+; compilation unit finished
+;   Undefined functions:
+;     CHECK-DEFINED-TYPE-MEMBERSHIP-INTERNAL LOOKUP-ELEMENT-TEST UPSCAN
+;   caught 3 STYLE-WARNING conditions
+
+; in: DEFUN NEW-UNION-TYPE
+;     (MAPCAR #'LOOKUP-ELEMENT-TEST SUBTYPES)
+; --> LET LET SB-INT:DO-ANONYMOUS BLOCK LET TAGBODY TAGBODY SB-KERNEL:%RPLACD 
+; --> SETQ THE CONS FUNCALL 
+; ==>
+;   (SB-C::%FUNCALL #'LOOKUP-ELEMENT-TEST (CAR #:G2))
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT-TEST
+; 
+; compilation unit finished
+;   Undefined function:
+;     LOOKUP-ELEMENT-TEST
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN ADD-DERIVED-LINKS-MAP
+;     (CLEAR-MARKER M3)
+; 
+; caught STYLE-WARNING:
+;   undefined function: CLEAR-MARKER
+
+;     (CLEAR-MARKER-PAIR M2)
+; 
+; caught STYLE-WARNING:
+;   undefined function: CLEAR-MARKER-PAIR
+
+;     (DOWNSCAN OWNER M1)
+; 
+; caught STYLE-WARNING:
+;   undefined function: DOWNSCAN
+
+;     (EQ-SCAN-INTERNAL M2 :GATE-MAP M1 NIL NIL)
+; 
+; caught STYLE-WARNING:
+;   undefined function: EQ-SCAN-INTERNAL
+
+;     (FAST-MARK ROLE M2)
+; 
+; caught STYLE-WARNING:
+;   undefined function: FAST-MARK
+
+;     (LOWERMOST? X M1)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOWERMOST?
+
+;     (MARK-BOOLEAN M1 (LIST M2) (LIST M3))
+; 
+; caught STYLE-WARNING:
+;   undefined function: MARK-BOOLEAN
+
+;     (UNMARK MAP-NODE M2)
+; 
+; caught STYLE-WARNING:
+;   undefined function: UNMARK
+
+;     (UPPERMOST? Y M3)
+; 
+; caught STYLE-WARNING:
+;   undefined function: UPPERMOST?
+
+;     (UPSCAN OWNER M1)
+; 
+; caught STYLE-WARNING:
+;   undefined function: UPSCAN
+; 
+; compilation unit finished
+;   Undefined functions:
+;     CLEAR-MARKER CLEAR-MARKER-PAIR DOWNSCAN EQ-SCAN-INTERNAL FAST-MARK LOWERMOST? MARK-BOOLEAN UNMARK UPPERMOST? UPSCAN
+;   caught 10 STYLE-WARNING conditions
+
+; in: DEFUN ADD-DERIVED-LINKS-IS-A
+;     (ADD-DERIVED-LINKS-INTERNAL LINK (A-WIRE LINK) (B-WIRE LINK)
+;      (CONTEXT-WIRE LINK))
+; 
+; caught STYLE-WARNING:
+;   undefined function: ADD-DERIVED-LINKS-INTERNAL
+; 
+; compilation unit finished
+;   Undefined function:
+;     ADD-DERIVED-LINKS-INTERNAL
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN ADD-DERIVED-LINKS-EQ
+;     (ADD-DERIVED-LINKS-INTERNAL LINK (A-WIRE LINK) (B-WIRE LINK)
+;      (CONTEXT-WIRE LINK))
+; 
+; caught STYLE-WARNING:
+;   undefined function: ADD-DERIVED-LINKS-INTERNAL
+; 
+; compilation unit finished
+;   Undefined function:
+;     ADD-DERIVED-LINKS-INTERNAL
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN ADD-DERIVED-LINKS-INTERNAL
+;     (CLEAR-MARKER-PAIR M1)
+; 
+; caught STYLE-WARNING:
+;   undefined function: CLEAR-MARKER-PAIR
+
+;     (DOWNSCAN X-NODE M1)
+; 
+; caught STYLE-WARNING:
+;   undefined function: DOWNSCAN
+
+;     (FAST-MARK LINK *ACTIVATION-MARKER*)
+; 
+; caught STYLE-WARNING:
+;   undefined function: FAST-MARK
+
+;     (FAST-UNMARK LINK *ACTIVATION-MARKER*)
+; 
+; caught STYLE-WARNING:
+;   undefined function: FAST-UNMARK
+
+;     (MAP-NODE-ROLE H)
+; 
+; caught STYLE-WARNING:
+;   undefined function: MAP-NODE-ROLE
+
+;     (MARK-BOOLEAN M3 (LIST M1) (LIST M2))
+; 
+; caught STYLE-WARNING:
+;   undefined function: MARK-BOOLEAN
+
+;     (MARK-LOWERMOST M1 M2)
+; 
+; caught STYLE-WARNING:
+;   undefined function: MARK-LOWERMOST
+
+;     (MARK-UPPERMOST M1 M3)
+; 
+; caught STYLE-WARNING:
+;   undefined function: MARK-UPPERMOST
+
+;     (UPSCAN Y-NODE M1)
+; 
+; caught STYLE-WARNING:
+;   undefined function: UPSCAN
+; 
+; compilation unit finished
+;   Undefined functions:
+;     CLEAR-MARKER-PAIR DOWNSCAN FAST-MARK FAST-UNMARK MAP-NODE-ROLE MARK-BOOLEAN MARK-LOWERMOST MARK-UPPERMOST UPSCAN
+;   caught 9 STYLE-WARNING conditions
+WARNING:
+   Proclaiming COMMON-LISP-USER::FAST-MARK to be INLINE, but 7 calls to it were
+   previously compiled. A declaration of NOTINLINE at the call sites will
+   eliminate this warning, as will proclaiming and defining the function before
+   its first potential use.
+WARNING:
+   Proclaiming COMMON-LISP-USER::FAST-UNMARK to be INLINE, but 2 calls to it
+   were previously compiled. A declaration of NOTINLINE at the call sites will
+   eliminate this warning, as will proclaiming and defining the function before
+   its first potential use.
+
+; in: DEFUN MARK
+;     (LOOKUP-ELEMENT-TEST E)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT-TEST
+; 
+; compilation unit finished
+;   Undefined function:
+;     LOOKUP-ELEMENT-TEST
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN UNMARK
+;     (LOOKUP-ELEMENT-TEST E)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT-TEST
+; 
+; compilation unit finished
+;   Undefined function:
+;     LOOKUP-ELEMENT-TEST
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN MARKER-ON?
+;     (LOOKUP-ELEMENT-TEST E)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT-TEST
+; 
+; compilation unit finished
+;   Undefined function:
+;     LOOKUP-ELEMENT-TEST
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN MARKER-OFF?
+;     (LOOKUP-ELEMENT-TEST E)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT-TEST
+; 
+; compilation unit finished
+;   Undefined function:
+;     LOOKUP-ELEMENT-TEST
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN UPSCAN
+;     (X-SCAN UPSCAN-INTERNAL)
+; --> PROGN COND IF PROGN SETQ THE 
+; ==>
+;   (LOOKUP-ELEMENT-TEST START-ELEMENT)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT-TEST
+; 
+; compilation unit finished
+;   Undefined function:
+;     LOOKUP-ELEMENT-TEST
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN DOWNSCAN
+;     (X-SCAN DOWNSCAN-INTERNAL)
+; --> PROGN COND IF PROGN SETQ THE 
+; ==>
+;   (LOOKUP-ELEMENT-TEST START-ELEMENT)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT-TEST
+; 
+; compilation unit finished
+;   Undefined function:
+;     LOOKUP-ELEMENT-TEST
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN EQ-SCAN
+;     (X-SCAN EQ-SCAN-INTERNAL)
+; --> PROGN COND IF PROGN SETQ THE 
+; ==>
+;   (LOOKUP-ELEMENT-TEST START-ELEMENT)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT-TEST
+; 
+; compilation unit finished
+;   Undefined function:
+;     LOOKUP-ELEMENT-TEST
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN LOWERMOST?
+;     (LOOKUP-ELEMENT E)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT
+; 
+; compilation unit finished
+;   Undefined function:
+;     LOOKUP-ELEMENT
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN UPPERMOST?
+;     (LOOKUP-ELEMENT E)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT
+; 
+; compilation unit finished
+;   Undefined function:
+;     LOOKUP-ELEMENT
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN INCOMPATIBLE?
+;     (LOOKUP-ELEMENT-TEST E1)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT-TEST
+; 
+; compilation unit finished
+;   Undefined function:
+;     LOOKUP-ELEMENT-TEST
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN WHICH-SPLIT-MEMBER?
+;     (LOOKUP-ELEMENT-TEST E)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT-TEST
+; 
+; compilation unit finished
+;   Undefined function:
+;     LOOKUP-ELEMENT-TEST
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN MARK-ROLE
+;     (LOOKUP-ELEMENT-TEST OWNER)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT-TEST
+; 
+; compilation unit finished
+;   Undefined function:
+;     LOOKUP-ELEMENT-TEST
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN MARK-ROLE-INVERSE
+;     (LOOKUP-ELEMENT-TEST PLAYER)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT-TEST
+; 
+; compilation unit finished
+;   Undefined function:
+;     LOOKUP-ELEMENT-TEST
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN MARK-REL-INTERNAL
+;     (LOOKUP-ELEMENT-TEST A)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT-TEST
+
+;     (MARK-REL-DESCRIPTION SOURCE M M-REL FWD REV DOWNSCAN RECURSION-ALLOWANCE)
+; 
+; caught STYLE-WARNING:
+;   undefined function: MARK-REL-DESCRIPTION
+; 
+; compilation unit finished
+;   Undefined functions:
+;     LOOKUP-ELEMENT-TEST MARK-REL-DESCRIPTION
+;   caught 2 STYLE-WARNING conditions
+
+; in: DEFUN MARK-REL-DESCRIPTION
+;     (EXTERNALIZE-MARKER M-TARGET M M-DESC)
+; 
+; caught STYLE-WARNING:
+;   undefined function: EXTERNALIZE-MARKER
+; 
+; compilation unit finished
+;   Undefined function:
+;     EXTERNALIZE-MARKER
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN MARK-REL
+;     (LOOKUP-ELEMENT-TEST REL)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT-TEST
+; 
+; compilation unit finished
+;   Undefined function:
+;     LOOKUP-ELEMENT-TEST
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN MARK-REL-INVERSE
+;     (LOOKUP-ELEMENT-TEST REL)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT-TEST
+; 
+; compilation unit finished
+;   Undefined function:
+;     LOOKUP-ELEMENT-TEST
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN IN-CONTEXT
+;     (LOOKUP-ELEMENT-TEST E)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT-TEST
+; 
+; compilation unit finished
+;   Undefined function:
+;     LOOKUP-ELEMENT-TEST
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN SIMPLE-IS-X-A-Y?
+;     (LOOKUP-ELEMENT-TEST X)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT-TEST
+; 
+; compilation unit finished
+;   Undefined function:
+;     LOOKUP-ELEMENT-TEST
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN SIMPLE-IS-X-EQ-Y?
+;     (LOOKUP-ELEMENT-TEST X)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT-TEST
+; 
+; compilation unit finished
+;   Undefined function:
+;     LOOKUP-ELEMENT-TEST
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN MARK-SUPERTYPES
+;     (LOOKUP-ELEMENT-TEST E)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT-TEST
+; 
+; compilation unit finished
+;   Undefined function:
+;     LOOKUP-ELEMENT-TEST
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN MARK-INFERIORS
+;     (LOOKUP-ELEMENT-TEST E)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT-TEST
+; 
+; compilation unit finished
+;   Undefined function:
+;     LOOKUP-ELEMENT-TEST
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN MARK-EQUALS
+;     (LOOKUP-ELEMENT-TEST E)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT-TEST
+; 
+; compilation unit finished
+;   Undefined function:
+;     LOOKUP-ELEMENT-TEST
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN MARK-SUBTYPES
+;     (LOOKUP-ELEMENT-TEST E)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT-TEST
+; 
+; compilation unit finished
+;   Undefined function:
+;     LOOKUP-ELEMENT-TEST
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN MARK-INSTANCES
+;     (LOOKUP-ELEMENT-TEST E)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT-TEST
+; 
+; compilation unit finished
+;   Undefined function:
+;     LOOKUP-ELEMENT-TEST
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN GOOD-ANSWER?
+;     (LOOKUP-ELEMENT E)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT
+; 
+; compilation unit finished
+;   Undefined function:
+;     LOOKUP-ELEMENT
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN SHOW-ONTOLOGY
+;     (LOOKUP-ELEMENT-TEST UNDER)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT-TEST
+
+;     (SHOW-ONTOLOGY1 UNDER 0 M)
+; 
+; caught STYLE-WARNING:
+;   undefined function: SHOW-ONTOLOGY1
+; 
+; compilation unit finished
+;   Undefined functions:
+;     LOOKUP-ELEMENT-TEST SHOW-ONTOLOGY1
+;   caught 2 STYLE-WARNING conditions
+
+; in: DEFUN SHOW-ONTOLOGY1
+;     (GET-ENGLISH-NAMES UNDER)
+; 
+; caught STYLE-WARNING:
+;   undefined function: GET-ENGLISH-NAMES
+; 
+; compilation unit finished
+;   Undefined function:
+;     GET-ENGLISH-NAMES
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN MARK-ROLES
+;     (LOOKUP-ELEMENT-TEST E)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT-TEST
+; 
+; compilation unit finished
+;   Undefined function:
+;     LOOKUP-ELEMENT-TEST
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN THE-X-ROLE-OF-Y
+;     (LOOKUP-ELEMENT-TEST X)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT-TEST
+; 
+; compilation unit finished
+;   Undefined function:
+;     LOOKUP-ELEMENT-TEST
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN STATEMENT-TRUE?
+;     (LOOKUP-ELEMENT-TEST REL)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT-TEST
+; 
+; compilation unit finished
+;   Undefined function:
+;     LOOKUP-ELEMENT-TEST
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN CAN-X-HAVE-A-Y?
+;     (LOOKUP-ELEMENT-TEST X)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT-TEST
+; 
+; compilation unit finished
+;   Undefined function:
+;     LOOKUP-ELEMENT-TEST
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN CAN-X-BE-THE-Y-OF-Z?
+;     (LOOKUP-ELEMENT-TEST X)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT-TEST
+; 
+; compilation unit finished
+;   Undefined function:
+;     LOOKUP-ELEMENT-TEST
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN X-IS-THE-Y-OF-Z
+;     (FIXUP-ROLE-FILLER X Y Z)
+; 
+; caught STYLE-WARNING:
+;   undefined function: FIXUP-ROLE-FILLER
+
+;     (LOOKUP-ELEMENT-TEST X)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT-TEST
+; 
+; compilation unit finished
+;   Undefined functions:
+;     FIXUP-ROLE-FILLER LOOKUP-ELEMENT-TEST
+;   caught 2 STYLE-WARNING conditions
+
+; in: DEFUN X-IS-A-Y-OF-Z
+;     (LOOKUP-ELEMENT-OR-DEFER X)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT-OR-DEFER
+
+;     (LOOKUP-ELEMENT-TEST Y)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT-TEST
+; 
+; compilation unit finished
+;   Undefined functions:
+;     LOOKUP-ELEMENT-OR-DEFER LOOKUP-ELEMENT-TEST
+;   caught 2 STYLE-WARNING conditions
+
+; in: DEFUN THE-X-OF-Y-IS-A-Z
+;     (LOOKUP-ELEMENT-TEST X)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT-TEST
+; 
+; compilation unit finished
+;   Undefined function:
+;     LOOKUP-ELEMENT-TEST
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN LOOKUP-ELEMENT
+;     (DISAMBIGUATE NAME DEFS SYNTAX-TAGS)
+; 
+; caught STYLE-WARNING:
+;   undefined function: DISAMBIGUATE
+
+; in: DEFUN LOOKUP-ELEMENT => DEFS (LOOKUP-DEFINITIONS NAME SYNTAX-TAGS)
+;     (LOOKUP-DEFINITIONS NAME SYNTAX-TAGS)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-DEFINITIONS
+
+; in: DEFUN LOOKUP-ELEMENT
+;     (LOOKUP-ELEMENT-INAME NAME)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT-INAME
+; 
+; compilation unit finished
+;   Undefined functions:
+;     DISAMBIGUATE LOOKUP-DEFINITIONS LOOKUP-ELEMENT-INAME
+;   caught 3 STYLE-WARNING conditions
+
+; in: DEFUN LOOKUP-ELEMENT-INAME
+;     (LOOKUP-STRING-IN-NAMESPACE INAME-STRING NAMESPACE)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-STRING-IN-NAMESPACE
+; 
+; compilation unit finished
+;   Undefined function:
+;     LOOKUP-STRING-IN-NAMESPACE
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFSTRUCT NAMESPACE
+;     (DEFSTRUCT
+;         (NAMESPACE (:CONSTRUCTOR INTERNAL-MAKE-NAMESPACE)
+;                    (:PRINT-FUNCTION PRINT-NAMESPACE))
+;       (NAME)
+;       (NAMETABLE (MAKE-HASH-TABLE :TEST #'EQUAL))
+;       (INCLUDE NIL))
+; --> PROGN LET* SB-INT:NAMED-LAMBDA FUNCTION SYMBOL-MACROLET 
+; --> SB-PCL::FAST-LEXICAL-METHOD-FUNCTIONS 
+; --> SB-PCL::BIND-FAST-LEXICAL-METHOD-FUNCTIONS FLET SB-PCL::BIND-ARGS LET* 
+; --> LOCALLY SYMBOL-MACROLET BLOCK FUNCALL 
+; ==>
+;   (SB-C::%FUNCALL #'PRINT-NAMESPACE #:OBJECT #:STREAM
+;                   SB-KERNEL:*CURRENT-LEVEL-IN-PRINT*)
+; 
+; caught STYLE-WARNING:
+;   undefined function: PRINT-NAMESPACE
+; 
+; compilation unit finished
+;   Undefined function:
+;     PRINT-NAMESPACE
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN MAKE-NAMESPACE
+;     (GET-NAMESPACE INCLUDE)
+; 
+; caught STYLE-WARNING:
+;   undefined function: GET-NAMESPACE
+; 
+; compilation unit finished
+;   Undefined function:
+;     GET-NAMESPACE
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN ENGLISH
+;     (ENGLISH-INTERNAL ELEMENT R)
+; 
+; caught STYLE-WARNING:
+;   undefined function: ENGLISH-INTERNAL
+; 
+; compilation unit finished
+;   Undefined function:
+;     ENGLISH-INTERNAL
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN ENGLISH-INTERNAL
+;     (REGISTER-DEFINITION INAME ELEMENT SYNTAX-TAG)
+; 
+; caught STYLE-WARNING:
+;   undefined function: REGISTER-DEFINITION
+; 
+; compilation unit finished
+;   Undefined function:
+;     REGISTER-DEFINITION
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN MERGE-ENGLISH-INVERSE
+;     (MAPCAR #'FLIP-DIRECTION INV)
+; --> LET LET SB-INT:DO-ANONYMOUS BLOCK LET TAGBODY TAGBODY SB-KERNEL:%RPLACD 
+; --> SETQ THE CONS FUNCALL 
+; ==>
+;   (SB-C::%FUNCALL #'FLIP-DIRECTION (CAR #:G1))
+; 
+; caught STYLE-WARNING:
+;   undefined function: FLIP-DIRECTION
+; 
+; compilation unit finished
+;   Undefined function:
+;     FLIP-DIRECTION
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN DISAMBIGUATE
+;     (ELEMENT-TYPE-LABEL (CAR DEF))
+; 
+; caught STYLE-WARNING:
+;   undefined function: ELEMENT-TYPE-LABEL
+; 
+; compilation unit finished
+;   Undefined function:
+;     ELEMENT-TYPE-LABEL
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN LOAD-KB
+;     (PROCESS-DEFERRED-CONNECTIONS)
+; 
+; caught STYLE-WARNING:
+;   undefined function: PROCESS-DEFERRED-CONNECTIONS
+; 
+; compilation unit finished
+;   Undefined function:
+;     PROCESS-DEFERRED-CONNECTIONS
+;   caught 1 STYLE-WARNING condition
+WARNING: redefining COMMON-LISP-USER::LOAD-KB in DEFUN
+
+; in: DEFUN CHECKPOINT-KB
+;     (CURRENT-TIME-STRING)
+; 
+; caught STYLE-WARNING:
+;   undefined function: CURRENT-TIME-STRING
+
+;     (DUMP-ELEMENT E DUMP)
+; 
+; caught STYLE-WARNING:
+;   undefined function: DUMP-ELEMENT
+; 
+; compilation unit finished
+;   Undefined functions:
+;     CURRENT-TIME-STRING DUMP-ELEMENT
+;   caught 2 STYLE-WARNING conditions
+
+; in: DEFUN CHECKPOINT-NEW
+;     (CURRENT-TIME-STRING)
+; 
+; caught STYLE-WARNING:
+;   undefined function: CURRENT-TIME-STRING
+
+;     (DUMP-ELEMENT E DUMP)
+; 
+; caught STYLE-WARNING:
+;   undefined function: DUMP-ELEMENT
+; 
+; compilation unit finished
+;   Undefined functions:
+;     CURRENT-TIME-STRING DUMP-ELEMENT
+;   caught 2 STYLE-WARNING conditions
+
+; in: DEFUN DUMP-ELEMENT
+;     (UNRAVEL-ENGLISH-NAMES E)
+; 
+; caught STYLE-WARNING:
+;   undefined function: UNRAVEL-ENGLISH-NAMES
+; 
+; compilation unit finished
+;   Undefined function:
+;     UNRAVEL-ENGLISH-NAMES
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN CHECK-LOADED-FILES
+;     #'SAME-FILENAME
+; 
+; caught STYLE-WARNING:
+;   undefined function: SAME-FILENAME
+; 
+; compilation unit finished
+;   Undefined function:
+;     SAME-FILENAME
+;   caught 1 STYLE-WARNING condition
+Loading KB "bootstrap".
+Assigning 0 as context marker, 1 as activation marker.
+31 deferred connections fixed, 0 remain.
+Load of "bootstrap" completed.  68 elements total.
+
+;;; Scone KB engine loaded and ready.
+While evaluating the form starting at line 32, column 0
+  of #P"/usr/share/scone-server/lib/cl-ppcre/load.lisp":
+
+debugger invoked on a SB-INT:SIMPLE-FILE-ERROR in thread
+#<THREAD "main thread" RUNNING {1002FAF1F3}>:
+  error opening #P"/usr/share/scone-server/lib/cl-ppcre/packages.fasl":
+    Permiso denegado
+
+Type HELP for debugger help, or (SB-EXT:EXIT) to exit from SBCL.
+
+restarts (invokable by number or by possibly-abbreviated name):
+  0: [RETRY   ] Retry EVAL of current toplevel form.
+  1: [CONTINUE] Ignore error and continue loading file "/usr/share/scone-server/lib/cl-ppcre/load.lisp".
+  2: [ABORT   ] Abort loading file "/usr/share/scone-server/lib/cl-ppcre/load.lisp".
+  3:            Ignore runtime option --eval "(progn (load-and-start-scone-server :port 6517 :scone-path \"/usr/share/scone/\" :scone-version \"1.0.0\" :xml nil :server-address \"0.0.0.0\" ) (quit))".
+  4:            Skip rest of --eval and --load options.
+  5:            Skip to toplevel READ/EVAL/PRINT loop.
+  6: [EXIT    ] Exit SBCL (calling #'EXIT, killing the process).
+
+((FLET SB-IMPL::VANILLA-OPEN-ERROR :IN OPEN))
+0] 
+; compilation aborted after 0:00:00.001
+; 
+; compilation unit aborted
+;   caught 1 fatal ERROR condition
+Loading xml-helper-fcns.lisp...
+
+debugger invoked on a SB-C::INPUT-ERROR-IN-LOAD in thread
+#<THREAD "main thread" RUNNING {1002FAF1F3}>:
+  READ error during LOAD:
+
+    Package CL-PPCRE does not exist.
+
+      Line: 23, Column: 42, File-Position: 734
+
+      Stream: #<SB-INT:FORM-TRACKING-STREAM for "file /usr/share/scone-server/src/xml-helper-fcns.lisp" {1004A2EE53}>
+
+Type HELP for debugger help, or (SB-EXT:EXIT) to exit from SBCL.
+
+restarts (invokable by number or by possibly-abbreviated name):
+  0: [ABORT   ] Abort loading file "/usr/share/scone-server/src/xml-helper-fcns.lisp".
+  1: [CONTINUE] Ignore runtime option --eval "(progn (load-and-start-scone-server :port 6517 :scone-path \"/usr/share/scone/\" :scone-version \"1.0.0\" :xml nil :server-address \"0.0.0.0\" ) (quit))".
+  2:            Skip rest of --eval and --load options.
+  3:            Skip to toplevel READ/EVAL/PRINT loop.
+  4: [EXIT    ] Exit SBCL (calling #'EXIT, killing the process).
+
+(SB-C:COMPILER-ERROR SB-C::INPUT-ERROR-IN-LOAD :CONDITION #<SB-INT:SIMPLE-READER-PACKAGE-ERROR "Package ~A does not exist." {1004A322C3}> :STREAM #<SB-INT:FORM-TRACKING-STREAM for "file /usr/share/scone-server/src/xml-helper-fcns.lisp" {1004A2EE53}>)
+0] Loading wrapper-fcns.lisp...
+
+; file: /usr/share/scone-server/src/wrapper-fcns.lisp
+; in: DEFUN SCONE-ANNOTATION->XML
+;     (MAKE-ELEMENT-XML-FRIENDLY (FIRST ANNOT))
+; 
+; caught STYLE-WARNING:
+;   undefined function: MAKE-ELEMENT-XML-FRIENDLY
+; 
+; compilation unit finished
+;   Undefined function:
+;     MAKE-ELEMENT-XML-FRIENDLY
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN GET-SCONE-ANNOTATIONS-XML
+;     (GET-FIRST-CHILD ARGS)
+; 
+; caught STYLE-WARNING:
+;   undefined function: GET-FIRST-CHILD
+
+;     (GET-SCONE-ANNOTATIONS (GET-TAGNAME (GET-FIRST-CHILD ARGS)))
+; 
+; caught STYLE-WARNING:
+;   undefined function: GET-SCONE-ANNOTATIONS
+
+;     (GET-TAGNAME (GET-FIRST-CHILD ARGS))
+; 
+; caught STYLE-WARNING:
+;   undefined function: GET-TAGNAME
+; 
+; compilation unit finished
+;   Undefined functions:
+;     GET-FIRST-CHILD GET-SCONE-ANNOTATIONS GET-TAGNAME
+;   caught 3 STYLE-WARNING conditions
+
+; in: DEFUN SCONE-O-TATOR-XML
+;     (GET-SCONE-ANNOTATIONS STRING)
+; 
+; caught STYLE-WARNING:
+;   undefined function: GET-SCONE-ANNOTATIONS
+; 
+; compilation unit finished
+;   Undefined function:
+;     GET-SCONE-ANNOTATIONS
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN GET-DESCRIBE-GRAPH-XML
+;     (GET-ATTRIBUTE (GET-FIRST-CHILD ARGS :|text|) :|value|)
+; 
+; caught STYLE-WARNING:
+;   undefined function: GET-ATTRIBUTE
+
+;     (GET-DESCRIBE-GRAPH
+;      (IF (GET-FIRST-CHILD ARGS :|text|)
+;          (GET-ATTRIBUTE (GET-FIRST-CHILD ARGS :|text|) :|value|)
+;          (READ-FROM-STRING
+;           (GET-ATTRIBUTE (GET-FIRST-CHILD ARGS :|scone-element|) :|value|))))
+; 
+; caught STYLE-WARNING:
+;   undefined function: GET-DESCRIBE-GRAPH
+
+;     (GET-FIRST-CHILD ARGS :|text|)
+; 
+; caught STYLE-WARNING:
+;   undefined function: GET-FIRST-CHILD
+; 
+; compilation unit finished
+;   Undefined functions:
+;     GET-ATTRIBUTE GET-DESCRIBE-GRAPH GET-FIRST-CHILD
+;   caught 3 STYLE-WARNING conditions
+
+; in: DEFUN SAFE-LOOKUP
+;     (LOOKUP-ELEMENT-PRED NAME)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT-PRED
+; 
+; compilation unit finished
+;   Undefined function:
+;     LOOKUP-ELEMENT-PRED
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN SAFE-LOOKUP-EVENT
+;     (LOOKUP-ELEMENT-PRED NAME)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT-PRED
+; 
+; compilation unit finished
+;   Undefined function:
+;     LOOKUP-ELEMENT-PRED
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN STRING->CONCEPTS-XML
+;     (ELEMENTS->XML (MAP 'LIST #'CAR (LOOKUP-DEFINITIONS STRING)))
+; 
+; caught STYLE-WARNING:
+;   undefined function: ELEMENTS->XML
+
+;     (RESPONSE-WRAPPER
+;      (ELEMENTS->XML (MAP 'LIST #'CAR (LOOKUP-DEFINITIONS STRING))))
+; 
+; caught STYLE-WARNING:
+;   undefined function: RESPONSE-WRAPPER
+; 
+; compilation unit finished
+;   Undefined functions:
+;     ELEMENTS->XML RESPONSE-WRAPPER
+;   caught 2 STYLE-WARNING conditions
+
+; in: DEFUN CONCEPT->STRINGS-XML
+;     (RESPONSE-WRAPPER (GET-ENGLISH-NAMES-XML STRING))
+; 
+; caught STYLE-WARNING:
+;   undefined function: RESPONSE-WRAPPER
+; 
+; compilation unit finished
+;   Undefined function:
+;     RESPONSE-WRAPPER
+;   caught 1 STYLE-WARNING condition
+
+; file: /usr/share/scone-server/src/wrapper-fcns.lisp
+; in: DEFUN ENGLISH-NAMES-XML
+;     (DEFUN ENGLISH-NAMES-XML (E NAME)
+;       (LET* ((ELT (LOOKUP-ELEMENT E))
+;              (ENAME-LIST (MAP 'LIST #'CAR #))
+;              (INAME (ELEMENT-NAME ELT)))
+;         (REDUCE #'(LAMBDA (X Y) (CONCATENATE 'STRING X Y))
+;                 (MAP 'LIST #'(LAMBDA # #) ENAME-LIST))))
+; 
+; caught STYLE-WARNING:
+;   The variable NAME is defined but never used.
+; 
+; compilation unit finished
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN IS-X-A-Y?-XML
+;     (RESPONSE-WRAPPER
+;      (IF (IS-X-A-Y? X Y)
+;          (FORMAT NIL "<true/>")
+;          (FORMAT NIL "<false/>")))
+; 
+; caught STYLE-WARNING:
+;   undefined function: RESPONSE-WRAPPER
+; 
+; compilation unit finished
+;   Undefined function:
+;     RESPONSE-WRAPPER
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN IS-STATEMENT-TRUE?-XML
+;     (IS-STATEMENT-TRUE? X Y Z)
+; 
+; caught STYLE-WARNING:
+;   undefined function: IS-STATEMENT-TRUE?
+
+;     (RESPONSE-WRAPPER
+;      (IF (IS-STATEMENT-TRUE? X Y Z)
+;          (FORMAT NIL "<true/>")
+;          (FORMAT NIL "<false/>")))
+; 
+; caught STYLE-WARNING:
+;   undefined function: RESPONSE-WRAPPER
+; 
+; compilation unit finished
+;   Undefined functions:
+;     IS-STATEMENT-TRUE? RESPONSE-WRAPPER
+;   caught 2 STYLE-WARNING conditions
+
+; in: DEFUN LOOKUP-ELEMENT-XML
+;     (ELEMENT->XML ELT)
+; 
+; caught STYLE-WARNING:
+;   undefined function: ELEMENT->XML
+
+;     (LOOKUP-ELEMENT-PRED STRING)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LOOKUP-ELEMENT-PRED
+
+;     (RESPONSE-WRAPPER
+;      (IF (NULL ELT)
+;          ""
+;          (ELEMENT->XML ELT)))
+; 
+; caught STYLE-WARNING:
+;   undefined function: RESPONSE-WRAPPER
+; 
+; compilation unit finished
+;   Undefined functions:
+;     ELEMENT->XML LOOKUP-ELEMENT-PRED RESPONSE-WRAPPER
+;   caught 3 STYLE-WARNING conditions
+
+; in: DEFUN GET-MINED-FACTS-XML
+;     (GET-MINED-FACTS)
+; 
+; caught STYLE-WARNING:
+;   undefined function: GET-MINED-FACTS
+
+;     (RESPONSE-WRAPPER (STATEMENTS->XML (GET-MINED-FACTS)))
+; 
+; caught STYLE-WARNING:
+;   undefined function: RESPONSE-WRAPPER
+
+;     (STATEMENTS->XML (GET-MINED-FACTS))
+; 
+; caught STYLE-WARNING:
+;   undefined function: STATEMENTS->XML
+; 
+; compilation unit finished
+;   Undefined functions:
+;     GET-MINED-FACTS RESPONSE-WRAPPER STATEMENTS->XML
+;   caught 3 STYLE-WARNING conditions
+
+; in: DEFUN GET-ALL-STATEMENTS-XML
+;     (RESPONSE-WRAPPER (STATEMENTS->XML (LIST-INSTANCES REL)))
+; 
+; caught STYLE-WARNING:
+;   undefined function: RESPONSE-WRAPPER
+
+;     (STATEMENTS->XML (LIST-INSTANCES REL))
+; 
+; caught STYLE-WARNING:
+;   undefined function: STATEMENTS->XML
+; 
+; compilation unit finished
+;   Undefined functions:
+;     RESPONSE-WRAPPER STATEMENTS->XML
+;   caught 2 STYLE-WARNING conditions
+
+; in: DEFUN LIST-REL-XML
+;     (ELEMENTS->XML (LIST-REL A REL))
+; 
+; caught STYLE-WARNING:
+;   undefined function: ELEMENTS->XML
+
+;     (RESPONSE-WRAPPER (ELEMENTS->XML (LIST-REL A REL)))
+; 
+; caught STYLE-WARNING:
+;   undefined function: RESPONSE-WRAPPER
+; 
+; compilation unit finished
+;   Undefined functions:
+;     ELEMENTS->XML RESPONSE-WRAPPER
+;   caught 2 STYLE-WARNING conditions
+
+; in: DEFUN LIST-REL-INVERSE-XML
+;     (ELEMENTS->XML (LIST-REL-INVERSE REL B))
+; 
+; caught STYLE-WARNING:
+;   undefined function: ELEMENTS->XML
+
+;     (RESPONSE-WRAPPER (ELEMENTS->XML (LIST-REL-INVERSE REL B)))
+; 
+; caught STYLE-WARNING:
+;   undefined function: RESPONSE-WRAPPER
+; 
+; compilation unit finished
+;   Undefined functions:
+;     ELEMENTS->XML RESPONSE-WRAPPER
+;   caught 2 STYLE-WARNING conditions
+
+; in: DEFUN ENGLISH-XML
+;     (ELEMENTS->XML (ENGLISH A B))
+; 
+; caught STYLE-WARNING:
+;   undefined function: ELEMENTS->XML
+
+;     (RESPONSE-WRAPPER (ELEMENTS->XML (ENGLISH A B)))
+; 
+; caught STYLE-WARNING:
+;   undefined function: RESPONSE-WRAPPER
+; 
+; compilation unit finished
+;   Undefined functions:
+;     ELEMENTS->XML RESPONSE-WRAPPER
+;   caught 2 STYLE-WARNING conditions
+
+; file: /usr/share/scone-server/src/wrapper-fcns.lisp
+; in: DEFUN TEMP-ENGLISH
+;     (MULTIPLE-VALUE-BIND (VALUE EXISTS)
+;         (INTERN NAME)
+;       (WHEN EXISTS (PUSH (CONS E NAME) *TEMP-DICTIONARY*)))
+; --> MULTIPLE-VALUE-CALL 
+; ==>
+;   #'(LAMBDA (&OPTIONAL (VALUE) (EXISTS) &REST #:G0)
+;       (DECLARE (IGNORE #:G0))
+;       (WHEN EXISTS (PUSH (CONS E NAME) *TEMP-DICTIONARY*)))
+; 
+; caught STYLE-WARNING:
+;   The variable VALUE is defined but never used.
+
+; in: DEFUN TEMP-ENGLISH
+;     (PUSH (CONS E NAME) *TEMP-DICTIONARY*)
+; --> LET* 
+; ==>
+;   (SETQ *TEMP-DICTIONARY* (CONS #:ITEM *TEMP-DICTIONARY*))
+; 
+; caught WARNING:
+;   undefined variable: *TEMP-DICTIONARY*
+; 
+; compilation unit finished
+;   Undefined variable:
+;     *TEMP-DICTIONARY*
+;   caught 1 WARNING condition
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN GET-SYNONYMS
+;     (GET-ATTRIBUTE (GET-FIRST-CHILD ARGS :|text|) :|value|)
+; 
+; caught STYLE-WARNING:
+;   undefined function: GET-ATTRIBUTE
+
+;     (GET-FIRST-CHILD ARGS :|text|)
+; 
+; caught STYLE-WARNING:
+;   undefined function: GET-FIRST-CHILD
+; 
+; compilation unit finished
+;   Undefined functions:
+;     GET-ATTRIBUTE GET-FIRST-CHILD
+;   caught 2 STYLE-WARNING conditions
+
+; in: DEFUN GET-ALL-SUBCLASSES
+;     (ELEMENTS->XML (LIST-MARKED M1))
+; 
+; caught STYLE-WARNING:
+;   undefined function: ELEMENTS->XML
+
+;     (GET-ATTRIBUTE (GET-FIRST-CHILD ARGS :|text|) :|value|)
+; 
+; caught STYLE-WARNING:
+;   undefined function: GET-ATTRIBUTE
+
+;     (GET-FIRST-CHILD ARGS :|text|)
+; 
+; caught STYLE-WARNING:
+;   undefined function: GET-FIRST-CHILD
+; 
+; compilation unit finished
+;   Undefined functions:
+;     ELEMENTS->XML GET-ATTRIBUTE GET-FIRST-CHILD
+;   caught 3 STYLE-WARNING conditions
+
+; in: DEFUN GET-EVENT-PRECONDITIONS
+;     (LIST-BEFORE EVENT)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LIST-BEFORE
+
+;     (RESPONSE-WRAPPER (STATEMENTS->XML (LIST-BEFORE EVENT)))
+; 
+; caught STYLE-WARNING:
+;   undefined function: RESPONSE-WRAPPER
+
+;     (STATEMENTS->XML (LIST-BEFORE EVENT))
+; 
+; caught STYLE-WARNING:
+;   undefined function: STATEMENTS->XML
+; 
+; compilation unit finished
+;   Undefined functions:
+;     LIST-BEFORE RESPONSE-WRAPPER STATEMENTS->XML
+;   caught 3 STYLE-WARNING conditions
+
+; in: DEFUN GET-PRECONDITION-PREDICATES
+;     (LIST-BEFORE EVENT)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LIST-BEFORE
+; 
+; compilation unit finished
+;   Undefined function:
+;     LIST-BEFORE
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN EVENTS-CAUSED-BY
+;     (LIST-BEFORE EVENT)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LIST-BEFORE
+; 
+; compilation unit finished
+;   Undefined function:
+;     LIST-BEFORE
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN DESTROY-CONTEXT
+;     (MARK-CONTEXT-CONTENTS CONTEXT M1)
+; 
+; caught WARNING:
+;   undefined variable: M1
+
+;     (M1)
+; 
+; caught STYLE-WARNING:
+;   undefined function: M1
+
+;     (MARK-CONTEXT-CONTENTS CONTEXT M1)
+; 
+; caught STYLE-WARNING:
+;   undefined function: MARK-CONTEXT-CONTENTS
+
+;     (WITH-TEMP-MARKER (M1) (MARK-CONTEXT-CONTENTS CONTEXT M1)
+;      (DOLIST (X (LIST-MARKED M1)) (REMOVE-ELEMENT X)))
+; 
+; caught STYLE-WARNING:
+;   undefined function: WITH-TEMP-MARKER
+; 
+; compilation unit finished
+;   Undefined functions:
+;     M1 MARK-CONTEXT-CONTENTS WITH-TEMP-MARKER
+;   Undefined variable:
+;     M1
+;   caught 1 WARNING condition
+;   caught 3 STYLE-WARNING conditions
+
+; in: DEFUN GET-TRANSITIVE-CLOSURE
+;     (GET-ATTRIBUTE (GET-CHILD ARGS :|relation|) :|value|)
+; 
+; caught STYLE-WARNING:
+;   undefined function: GET-ATTRIBUTE
+
+;     (GET-CHILD ARGS :|relation|)
+; 
+; caught STYLE-WARNING:
+;   undefined function: GET-CHILD
+
+;     (INVERTED-EVENTS->XML
+;      (LIST-REL (SAFE-LOOKUP-EVENT PREDICATE) {inverse event}))
+; 
+; caught STYLE-WARNING:
+;   undefined function: INVERTED-EVENTS->XML
+
+;     (LIST-AFTER (SAFE-LOOKUP-EVENT PREDICATE))
+; 
+; caught STYLE-WARNING:
+;   undefined function: LIST-AFTER
+
+;     (LIST-BEFORE (SAFE-LOOKUP-EVENT PREDICATE))
+; 
+; caught STYLE-WARNING:
+;   undefined function: LIST-BEFORE
+
+;     (RESPONSE-WRAPPER
+;      (LET ((RELATION (GET-ATTRIBUTE # :|value|))
+;            (PREDICATE (GET-ATTRIBUTE # :|value|)))
+;        (COND ((STRING-EQUAL RELATION "precondition-of") (STATEMENTS->XML #))
+;              ((STRING-EQUAL RELATION "postcondition-of") (STATEMENTS->XML #))
+;              ((STRING-EQUAL RELATION "inverse-of") (INVERTED-EVENTS->XML #))
+;              (T 'NIL))))
+; 
+; caught STYLE-WARNING:
+;   undefined function: RESPONSE-WRAPPER
+
+;     (STATEMENTS->XML (LIST-BEFORE (SAFE-LOOKUP-EVENT PREDICATE)))
+; 
+; caught STYLE-WARNING:
+;   undefined function: STATEMENTS->XML
+; 
+; compilation unit finished
+;   Undefined functions:
+;     GET-ATTRIBUTE GET-CHILD INVERTED-EVENTS->XML LIST-AFTER LIST-BEFORE RESPONSE-WRAPPER STATEMENTS->XML
+;   caught 7 STYLE-WARNING conditions
+Loading gateway.lisp...
+
+
+; file: /usr/share/scone-server/src/gateway.lisp
+; in: DEFUN GET-SESSION-ID
+;     (GET-ATTRIBUTE DOM :|session|)
+; 
+; caught STYLE-WARNING:
+;   undefined function: GET-ATTRIBUTE
+; 
+; compilation unit finished
+;   Undefined function:
+;     GET-ATTRIBUTE
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN GET-PASSWORD
+;     (GET-ATTRIBUTE DOM :|password|)
+; 
+; caught STYLE-WARNING:
+;   undefined function: GET-ATTRIBUTE
+; 
+; compilation unit finished
+;   Undefined function:
+;     GET-ATTRIBUTE
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN GET-FUNCTION
+;     (GET-CHILDREN DOM)
+; 
+; caught STYLE-WARNING:
+;   undefined function: GET-CHILDREN
+
+;     (GET-TAGNAME (GET-CHILDREN DOM))
+; 
+; caught STYLE-WARNING:
+;   undefined function: GET-TAGNAME
+; 
+; compilation unit finished
+;   Undefined functions:
+;     GET-CHILDREN GET-TAGNAME
+;   caught 2 STYLE-WARNING conditions
+
+; in: DEFUN GET-FUNCTION-ARGS
+;     (GET-CHILDREN DOM)
+; 
+; caught STYLE-WARNING:
+;   undefined function: GET-CHILDREN
+; 
+; compilation unit finished
+;   Undefined function:
+;     GET-CHILDREN
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN HANDLE-SCONE-XML-REQUEST
+;     (S-XML:PARSE-XML-STRING LINE)
+; 
+; caught STYLE-WARNING:
+;   undefined function: S-XML:PARSE-XML-STRING
+; 
+; compilation unit finished
+;   Undefined function:
+;     S-XML:PARSE-XML-STRING
+;   caught 1 STYLE-WARNING condition
+WARNING: redefining COMMON-LISP-USER::HANDLE-SCONE-REQUEST in DEFUN
+
+; in: DEFUN ECHO-XML
+;     (S-XML:PRINT-XML-STRING X :PRETTY :T)
+; 
+; caught STYLE-WARNING:
+;   undefined function: S-XML:PRINT-XML-STRING
+; 
+; compilation unit finished
+;   Undefined function:
+;     S-XML:PRINT-XML-STRING
+;   caught 1 STYLE-WARNING condition
+
+; in: DEFUN DEMO-RESET
+;     (DOLIST (ENTRY *TEMP-DICTIONARY*)
+;       (LET ((ENGLISH (CAR ENTRY)) (ELT (CDR ENTRY)))
+;         (UNREGISTER-DEFINITION ELT ENGLISH)))
+; --> BLOCK 
+; ==>
+;   (LET ((#:N-LIST0 *TEMP-DICTIONARY*))
+;     (TAGBODY
+;      #:START1
+;       (UNLESS (ENDP #:N-LIST0)
+;         (LET (#)
+;           (SETQ #)
+;           (TAGBODY #))
+;         (GO #:START1))))
+; 
+; caught WARNING:
+;   undefined variable: *TEMP-DICTIONARY*
+; 
+; compilation unit finished
+;   Undefined variable:
+;     *TEMP-DICTIONARY*
+;   caught 1 WARNING condition
+Loading KB "core".
+Loading KB "core-components/upper".
+{person} is unknown.  Defining it as a type under {undefined thing}.
+Load of "core-components/upper" completed.  265 elements total.
+
+Loading KB "core-components/units".
+Load of "core-components/units" completed.  1439 elements total.
+
+Loading KB "core-components/space-model".
+Load of "core-components/space-model" completed.  1495 elements total.
+
+Loading KB "core-components/time-model".
+Load of "core-components/time-model" completed.  2647 elements total.
+
+Loading KB "core-components/simple-physics".
+Load of "core-components/simple-physics" completed.  2679 elements total.
+
+Loading KB "core-components/simple-biology".
+Load of "core-components/simple-biology" completed.  2839 elements total.
+
+Loading KB "core-components/simple-information".
+Load of "core-components/simple-information" completed.  2939 elements total.
+
+Loading KB "core-components/simple-social-model".
+Load of "core-components/simple-social-model" completed.  3009 elements total.
+
+Loading KB "core-components/simple-person-model".
+Load of "core-components/simple-person-model" completed.  3260 elements total.
+
+Loading KB "core-components/simple-episodic-model".
+Load of "core-components/simple-episodic-model" completed.  3301 elements total.
+
+Loading KB "core-components/simple-geopolitics".
+Load of "core-components/simple-geopolitics" completed.  3641 elements total.
+
+Load of "core" completed.  3641 elements total.
+
+Starting server...
+Use XML: NIL
+Server address: 0.0.0.0
+Port number: 6517
+11/12/2016 12:49:23: Starting server on port 6517.
+11/12/2016 12:49:23: Listening for new connections...
+11/12/2016 12:49:44: New client connecting (current connections: 0) (thread count: 2)
+
+(#<SB-THREAD:THREAD "SconeServer" RUNNING {1005D05653}>
+ #<SB-THREAD:THREAD "main thread" RUNNING {1002FAF1F3}>)11/12/2016 12:49:44: Received connection from 127.0.0.1.
+11/12/2016 12:49:44: Preparing for new client (multi-threading enabled)...
+[PROMPT]
+(new-indv {papa} {bird})
+{papa}
+[PROMPT]
+(checkpoint-new "birds.lisp")
+11/12/2016 12:50:32: *****SCONE-ERROR***** Received:(checkpoint-new "birds.lisp"). Error: error opening #P"/usr/share/scone/1.0.0/kb/birds.lisp":
+                                                                                            Permiso denegado
+*****SCONE-ERROR***** Received:(checkpoint-new "birds.lisp").  Error:error opening #P"/usr/share/scone/1.0.0/kb/birds.lisp":
+                                                                       Permiso denegado
+NIL
+[PROMPT]
+(checkpoint-new "/home/david/kkk/birds.lisp")
+Checkpointed KB to #P"/home/david/kkk/birds.lisp".
+NIL
+[PROMPT]
+11/12/2016 12:53:41: New client connecting (current connections: 1) (thread count: 3)
+
+(#<SB-THREAD:THREAD "ThreadForClient-127.0.0.1.-1" RUNNING {1005ECF283}>
+ #<SB-THREAD:THREAD "SconeServer" RUNNING {1005D05653}>
+ #<SB-THREAD:THREAD "main thread" RUNNING {1002FAF1F3}>)11/12/2016 12:53:41: Received connection from 127.0.0.1.
+11/12/2016 12:53:41: Preparing for new client (multi-threading enabled)...
+[PROMPT]
+(new-indv {Martin} {monkey})
+{Martin}
+[PROMPT]
+(new-indv {Felix}  {monkey})
+{Felix}
+[PROMPT]
+(new-indv {Jesus} {bird})
+{Jesus}
+[PROMPT]
+(checkpoint-new "scone-knowledge.d/snapshots/birds.lisp")
+11/12/2016 12:53:42: *****SCONE-ERROR***** Received:(checkpoint-new "scone-knowledge.d/snapshots/birds.lisp"). Error: The path
+                                                                                                                        #P"/usr/share/scone/1.0.0/kb/scone-knowledge.d/snapshots/birds.lisp"
+                                                                                                                      does not exist.
+*****SCONE-ERROR***** Received:(checkpoint-new "scone-knowledge.d/snapshots/birds.lisp").  Error:The path
+                                                                                                   #P"/usr/share/scone/1.0.0/kb/scone-knowledge.d/snapshots/birds.lisp"
+                                                                                                 does not exist.
+NIL
+[PROMPT]
+11/12/2016 12:53:43: Request is null.  Disconnecting.
+11/12/2016 12:53:43: Closing client connection.
+11/12/2016 12:53:43: Socket closed.
+11/12/2016 12:54:36: New client connecting (current connections: 1) (thread count: 3)
+
+(#<SB-THREAD:THREAD "ThreadForClient-127.0.0.1.-1" RUNNING {1005ECF283}>
+ #<SB-THREAD:THREAD "SconeServer" RUNNING {1005D05653}>
+ #<SB-THREAD:THREAD "main thread" RUNNING {1002FAF1F3}>)11/12/2016 12:54:36: Received connection from 127.0.0.1.
+11/12/2016 12:54:36: Preparing for new client (multi-threading enabled)...
+[PROMPT]
+(new-indv {Martin} {monkey})
+11/12/2016 12:54:36: *****SCONE-ERROR***** Received:(new-indv {Martin} {monkey}). Error: The iname {Martin} is already in use.
+*****SCONE-ERROR***** Received:(new-indv {Martin} {monkey}).  Error:The iname {Martin} is already in use.
+NIL
+[PROMPT]
+11/12/2016 12:54:36: Read EOF from client stream. Attempting to disconnect and continue.
+11/12/2016 12:54:36: Request is null.  Disconnecting.
+11/12/2016 12:54:36: Closing client connection.
+11/12/2016 12:54:36: Socket closed.
