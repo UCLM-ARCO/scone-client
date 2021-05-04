@@ -1,6 +1,6 @@
 # Python3 Scone client module
 
-A simple python3 module to interact with a scone-server.
+A simple python3 module to interact with a [scone-server](https://github.com/UCLM-ARCO/scone-server)
 
 Basic example:
 
